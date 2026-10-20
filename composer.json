@@ -1,0 +1,31 @@
+{
+  "name": "fastapify/laravel",
+  "description": "FastAPI developer experience for Laravel - Automatic validation and OpenAPI generation",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dhiraj Parihar",
+      "email": "dhirajparihar2001@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0 || ^8.1 || ^8.2 || ^8.3",
+    "illuminate/http": "^9.0 || ^10.0 || ^11.0",
+    "illuminate/support": "^9.0 || ^10.0 || ^11.0",
+    "illuminate/validation": "^9.0 || ^10.0 || ^11.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Fastapify\\Laravel\\": "sdk-php/laravel/src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Fastapify\\Laravel\\FastapifyServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable"
+}
