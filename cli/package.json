@@ -1,0 +1,33 @@
+{
+  "name": "fastapify",
+  "version": "0.1.0",
+  "description": "Fastapify CLI - Automatic OpenAPI generation and Swagger UI server for polyglot backends",
+  "main": "index.js",
+  "bin": {
+    "fastapify": "./index.js"
+  },
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js serve",
+    "generate": "node index.js generate",
+    "build:binaries": "npx -y @vercel/pkg . --out-path dist"
+  },
+  "pkg": {
+    "scripts": "index.js",
+    "targets": [
+      "node20-linux-x64",
+      "node20-macos-x64",
+      "node20-win-x64"
+    ],
+    "outputPath": "dist"
+  },
+  "keywords": [
+    "fastapi",
+    "openapi",
+    "swagger",
+    "cli",
+    "documentation"
+  ],
+  "author": "Fastapify Maintainers",
+  "license": "MIT"
+}

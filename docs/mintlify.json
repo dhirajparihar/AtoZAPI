@@ -1,0 +1,61 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Fastapify",
+  "theme": "prism",
+  "colors": {
+    "primary": "#009688",
+    "light": "#26A69A",
+    "dark": "#00796B"
+  },
+  "topbarLinks": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com/fastapify/fastapify"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Quickstart",
+    "url": "/quickstart"
+  },
+  "tabs": [
+    {
+      "name": "Getting Started",
+      "url": "getting-started"
+    },
+    {
+      "name": "SDK Reference",
+      "url": "sdk"
+    },
+    {
+      "name": "CLI Reference",
+      "url": "cli"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "quickstart"
+      ]
+    },
+    {
+      "group": "SDK Reference",
+      "pages": [
+        "sdk/express",
+        "sdk/nextjs",
+        "sdk/gin",
+        "sdk/laravel"
+      ]
+    },
+    {
+      "group": "CLI Reference",
+      "pages": [
+        "cli/reference"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/fastapify/fastapify"
+  }
+}

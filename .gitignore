@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build and dist outputs
+dist/
+build/
+.next/
+out/
+
+# Caches and coverage
+.turbo/
+.cache/
+coverage/
+.phpunit.cache/
+
+# Environment and system files
+.env
+.env.local
+.DS_Store
+Thumbs.db

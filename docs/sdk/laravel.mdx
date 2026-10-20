@@ -1,0 +1,68 @@
+---
+title: "PHP (Laravel) SDK"
+description: "PHP 8+ native attribute routing and reflection-driven validation middleware for Laravel."
+---
+
+# PHP (Laravel) SDK (`fastapify/laravel`)
+
+The `fastapify/laravel` package allows Laravel developers to use PHP 8 native attributes to declare endpoint paths, summaries, and validation rules directly on controller methods.
+
+---
+
+## Installation
+
+Install via Composer:
+
+```bash
+composer require fastapify/laravel
+```
+
+The package registers the `FastapifyServiceProvider` automatically via package discovery.
+
+---
+
+## Complete Operational Example
+
+Tag controller methods with the `#[Post]` attribute:
+
+```php app/Http/Controllers/UserController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use Fastapify\Laravel\Attributes\Post;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class UserController
+{
+    #[Post(
+        path: '/api/users',
+        summary: 'Create a new user',
+        rules: [
+            'name' => 'required|string|min:2',
+            'age' => 'required|integer|min:18|max:120'
+        ]
+    )]
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $request->attributes->get('validatedBody') ?? $request->all();
+
+        return response()->json([
+            'id' => rand(1000, 9999),
+            'name' => $validated['name'],
+            'age' => (int) $validated['age'],
+            'createdAt' => date('c'),
+        ], 201);
+    }
+}
+```
+
+---
+
+## How It Works
+
+1. **Reflection**: `FastapifyMiddleware` uses `ReflectionMethod` to discover `#[Post]` attributes on the target controller action.
+2. **Validation**: It evaluates incoming `$request->all()` data using Laravel's native `Validator`.
+3. **HTTP 422 Interception**: Failed validations are formatted into the FastAPI `{ detail: [{ loc, msg, type }] }` format with status `422`.
+4. **Context Merging**: Valid properties are merged into `$request` and set on `$request->attributes->set('validatedBody', ...)`.

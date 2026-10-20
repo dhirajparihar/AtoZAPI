@@ -1,0 +1,31 @@
+{
+  "name": "fastapify-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FastAPI developer experience for Node.js, Next.js, and polyglot backends",
+  "workspaces": [
+    "cli",
+    "sdk-js/express",
+    "sdk-js/nextjs",
+    "examples/*"
+  ],
+  "scripts": {
+    "cli": "node ./cli/index.js",
+    "docs": "node ./cli/index.js serve",
+    "generate": "node ./cli/index.js generate",
+    "example:express": "node ./examples/express-app/server.js",
+    "test": "node ./scripts/test-all.js",
+    "test:all": "node ./scripts/test-all.js",
+    "test:parity": "node ./scripts/parity-test.js"
+  },
+  "keywords": [
+    "fastapi",
+    "openapi",
+    "swagger",
+    "validation",
+    "express",
+    "nextjs"
+  ],
+  "author": "Fastapify Maintainers",
+  "license": "MIT"
+}

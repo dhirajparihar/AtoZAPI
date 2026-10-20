@@ -1,0 +1,117 @@
+---
+title: "Quickstart"
+description: "Install the Fastapify CLI and generate interactive Swagger UI documentation in under two minutes."
+---
+
+# Quickstart Guide
+
+This guide walks you through installing the Fastapify CLI, scanning an existing codebase, and launching the interactive documentation server.
+
+---
+
+## 1. Installation
+
+Install the Fastapify CLI globally via npm or run it directly using `npx`:
+
+<CodeGroup>
+```bash npm
+npm install -g fastapify
+```
+
+```bash yarn
+yarn global add fastapify
+```
+
+```bash pnpm
+pnpm add -g fastapify
+```
+
+```bash npx
+npx fastapify serve
+```
+</CodeGroup>
+
+Verify the installation:
+
+```bash
+fastapify --help
+```
+
+---
+
+## 2. Register an Endpoint with Validation
+
+Add a Fastapify schema to your route handler. Here is a Node.js Express example:
+
+```javascript server.js
+const express = require('express');
+const { fastapify } = require('@fastapify/express');
+
+const app = express();
+app.use(express.json());
+
+// 1. Define your schema constraints
+const userSchema = {
+  name: { type: 'string', required: true, minLength: 2 },
+  age: { type: 'number', required: true, min: 18, max: 120 }
+};
+
+// 2. Attach fastapify middleware
+app.post('/api/users', fastapify(userSchema), (req, res) => {
+  const { name, age } = req.validatedBody;
+  res.status(201).json({ id: 1, name, age });
+});
+
+app.listen(3000, () => {
+  console.log('App running on http://localhost:3000');
+});
+```
+
+---
+
+## 3. Launch the Documentation Server
+
+Run the `fastapify` command in your project root:
+
+```bash
+fastapify
+```
+
+By default, the engine will:
+1. Scan your project files for route definitions and schema declarations.
+2. Compile a functional `openapi.json` matching OpenAPI 3.0.3 standards.
+3. Start a local documentation server on port `8000`.
+
+Output:
+```text
+[fastapify] Scanning /path/to/project
+[fastapify] Discovered 1 route(s):
+  POST   /api/users           (express) -> server.js
+[fastapify] Saved OpenAPI specification to openapi.json
+[fastapify] Server running on http://localhost:8000
+[fastapify] Docs:     http://localhost:8000/docs
+[fastapify] ReDoc:    http://localhost:8000/redoc
+[fastapify] Spec:     http://localhost:8000/openapi.json
+```
+
+---
+
+## 4. Explore the Interactive Docs
+
+Open your browser to [http://localhost:8000/docs](http://localhost:8000/docs):
+
+- **Swagger UI**: Test your endpoints interactively using "Try it out".
+- **Real-Time Validation**: The Swagger UI schema displays mandatory fields and numerical/string constraints automatically.
+- **FastAPI-Standard 422 Schemas**: The `HTTPValidationError` and `ValidationError` models are linked under each endpoint's response table.
+
+---
+
+## 5. Generate Spec for CI/CD
+
+To generate the `openapi.json` contract file without running the HTTP server (e.g. for CI pipelines or static hosting), run:
+
+```bash
+fastapify generate
+```
+
+This writes the validated spec to `./openapi.json` and exits with status code `0`.

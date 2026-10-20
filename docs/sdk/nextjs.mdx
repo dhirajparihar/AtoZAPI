@@ -1,0 +1,71 @@
+---
+title: "Next.js App Router SDK"
+description: "Higher-order route wrapper for Next.js 13+ and 14+ App Router route handlers."
+---
+
+# Next.js SDK (`@fastapify/nextjs`)
+
+The `@fastapify/nextjs` package provides a higher-order wrapper function `nextFastapify` for Next.js App Router route handlers (`app/**/route.js` or `app/**/route.ts`).
+
+---
+
+## Installation
+
+Install in your Next.js project:
+
+<CodeGroup>
+```bash npm
+npm install @fastapify/nextjs
+```
+
+```bash yarn
+yarn add @fastapify/nextjs
+```
+
+```bash pnpm
+pnpm add @fastapify/nextjs
+```
+</CodeGroup>
+
+---
+
+## Complete Operational Example
+
+In Next.js App Router, export HTTP method functions wrapped in `nextFastapify`:
+
+```javascript app/api/users/route.js
+import { nextFastapify } from '@fastapify/nextjs';
+
+const userSchema = {
+  name: {
+    type: 'string',
+    required: true,
+    minLength: 2
+  },
+  age: {
+    type: 'number',
+    required: true,
+    min: 18,
+    max: 120
+  }
+};
+
+export const POST = nextFastapify({
+  schema: userSchema,
+  handler: async (req, { validatedBody }) => {
+    // verified data is injected directly into context
+    return Response.json({
+      id: 101,
+      name: validatedBody.name,
+      age: validatedBody.age,
+      createdAt: new Date().toISOString()
+    }, { status: 201 });
+  }
+});
+```
+
+---
+
+## Error Handling
+
+When validation fails, `nextFastapify` intercepts the request before reaching your handler and immediately returns a standard Web API `Response` object with status `422` and the standardized `{ detail: [...] }` payload.

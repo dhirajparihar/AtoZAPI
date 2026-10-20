@@ -1,0 +1,125 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fastapify API Docs",
+    "version": "1.0.0",
+    "description": "Interactive API documentation generated automatically by Fastapify across polyglot backends."
+  },
+  "paths": {
+    "/api/users": {
+      "post": {
+        "summary": "POST /api/users (Polyglot)",
+        "description": "Implemented in **express**: `examples/express-app/server.js`\n\n- Supported in **gin**: `examples/go-app/main.go`\n\n- Supported in **laravel**: `examples/laravel-app/app/Http/Controllers/UserController.php`\n\n- Supported in **nextjs**: `examples/nextjs-app/app/api/users/route.js`",
+        "operationId": "post__api_users",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "JSON response payload"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "JSON request payload validated by fastapify",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Full legal name of the user",
+                    "minLength": 2
+                  },
+                  "age": {
+                    "type": "number",
+                    "description": "User age in full years (must be between 18 and 120)",
+                    "minimum": 18,
+                    "maximum": 120
+                  }
+                },
+                "required": [
+                  "name",
+                  "age"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ValidationError": {
+        "title": "ValidationError",
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          },
+          "ctx": {
+            "title": "Error Context",
+            "type": "object"
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      }
+    }
+  }
+}

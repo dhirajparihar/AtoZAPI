@@ -1,0 +1,19 @@
+{
+  "name": "@fastapify/express",
+  "version": "0.1.0",
+  "description": "FastAPI-style validation middleware and OpenAPI metadata hook for Express",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "keywords": [
+    "fastapi",
+    "express",
+    "validation",
+    "openapi",
+    "middleware"
+  ],
+  "author": "Fastapify Maintainers",
+  "license": "MIT"
+}

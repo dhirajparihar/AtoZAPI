@@ -1,0 +1,96 @@
+name: Fastapify Polyglot CI
+
+# Trigger workflow on every push or pull request targeting main or master branches
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+# Ensure concurrent runs for the same branch/PR cancel previous in-progress runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  javascript-suite:
+    name: JavaScript & TypeScript Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Monorepo Dependencies
+        run: npm install
+
+      - name: Run JS/TS Test Suite & CLI Verification
+        run: npm run test:all
+
+  go-suite:
+    name: Go (Gin) Ecosystem Suite
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sdk-go/gin
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go 1.22
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          check-latest: false
+          cache: true
+          cache-dependency-path: sdk-go/gin/go.mod
+
+      - name: Download Go Module Dependencies
+        run: go mod download
+
+      - name: Run Go Unit Tests
+        run: go test -v ./...
+
+  php-suite:
+    name: PHP (Laravel) Suite
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sdk-php/laravel
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: json, mbstring
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('sdk-php/laravel/composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer Dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run PHPUnit Tests
+        run: ./vendor/bin/phpunit

@@ -1,0 +1,19 @@
+{
+  "name": "@fastapify/nextjs",
+  "version": "0.1.0",
+  "description": "FastAPI-style request validation and OpenAPI metadata wrapper for Next.js App Router",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "keywords": [
+    "fastapi",
+    "nextjs",
+    "app-router",
+    "validation",
+    "openapi"
+  ],
+  "author": "Fastapify Maintainers",
+  "license": "MIT"
+}

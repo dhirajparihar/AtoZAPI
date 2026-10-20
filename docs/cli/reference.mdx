@@ -1,0 +1,62 @@
+---
+title: "CLI Reference"
+description: "Command-line interface options and configuration for the Fastapify scanner engine."
+---
+
+# Fastapify CLI Reference
+
+The Fastapify CLI scans active codebases, extracts endpoint declarations and schema constraints, compiles `openapi.json` specifications, and serves the embedded Swagger UI and ReDoc interfaces.
+
+---
+
+## Global Syntax
+
+```bash
+fastapify [command] [options]
+```
+
+If no command is provided, the CLI defaults to `serve`.
+
+---
+
+## Commands
+
+### `serve` (default)
+
+Scans the active directory, compiles `openapi.json`, and starts the localized documentation HTTP server.
+
+```bash
+fastapify serve [options]
+```
+
+### `generate`
+
+Scans the codebase, compiles `openapi.json` to disk, and exits without launching the HTTP server. Useful for CI/CD pipelines.
+
+```bash
+fastapify generate [options]
+```
+
+---
+
+## Command Options
+
+| Flag | Shorthand | Type | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `--port` | `-p` | Number | `8000` | Port for the documentation HTTP server. |
+| `--dir` | `-d` | Path | `.` | Target directory to recursively scan for route handlers. |
+| `--out` | `-o` | Path | `./openapi.json` | Destination path for the compiled OpenAPI 3.0 specification. |
+
+---
+
+## Examples
+
+### Custom Port and Scan Directory
+```bash
+fastapify serve --port 3001 --dir ./src
+```
+
+### Headless CI Specification Generation
+```bash
+fastapify generate --out ./public/openapi.json
+```

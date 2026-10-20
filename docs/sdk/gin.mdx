@@ -1,0 +1,148 @@
+---
+title: "Go (Gin) SDK"
+description: "Thread-safe struct reflection and validation Guard middleware for Gin web applications."
+---
+
+# Go (Gin) SDK (`github.com/fastapify/sdk-go/gin`)
+
+The `ginfastapify` package provides reflection-driven middleware for the Gin web framework. It intercepts incoming JSON requests, validates them against native Go struct binding tags, returns standardized FastAPI HTTP 422 error payloads, and attaches verified data to the Gin request context.
+
+---
+
+## Installation
+
+Add the module to your Go project:
+
+```bash
+go get github.com/fastapify/sdk-go/gin
+```
+
+Ensure your `go.mod` specifies Go 1.20+:
+
+```go go.mod
+module my-api
+
+go 1.22
+
+require (
+    github.com/fastapify/sdk-go/gin v0.1.0
+    github.com/gin-gonic/gin v1.9.1
+)
+```
+
+---
+
+## Complete Operational Example
+
+Define your data structure using standard `json` and `binding` struct tags. Pass the schema struct directly to `ginfastapify.Guard()`:
+
+```go main.go
+package main
+
+import (
+	"log"
+	"net/http"
+	"time"
+
+	ginfastapify "github.com/fastapify/sdk-go/gin"
+	"github.com/gin-gonic/gin"
+)
+
+// Define your request model using standard Go struct tags
+type CreateUserRequest struct {
+	Name     string `json:"name" binding:"required,min=2,max=50"`
+	Email    string `json:"email" binding:"required,email"`
+	Age      int    `json:"age" binding:"required,gte=18,lte=120"`
+	IsActive *bool  `json:"is_active" binding:"omitempty"`
+}
+
+func main() {
+	r := gin.Default()
+
+	// Protect route with ginfastapify.Guard
+	r.POST("/api/users", ginfastapify.Guard(CreateUserRequest{}), func(c *gin.Context) {
+		// Type-safe retrieval using generic helper
+		user, ok := ginfastapify.Body[CreateUserRequest](c)
+		if !ok {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve validated body"})
+			return
+		}
+
+		c.JSON(http.StatusCreated, gin.H{
+			"id":        time.Now().UnixNano() % 100000,
+			"name":      user.Name,
+			"email":     user.Email,
+			"age":       user.Age,
+			"createdAt": time.Now().UTC().Format(time.RFC3339),
+		})
+	})
+
+	log.Println("Server running on http://localhost:8080")
+	if err := r.Run(":8080"); err != nil {
+		log.Fatalf("Server error: %v", err)
+	}
+}
+```
+
+---
+
+## Automatic HTTP 422 Error Handling
+
+`ginfastapify.Guard` formats validation failures from `go-playground/validator/v10` into FastAPI's standardized error layout. Struct field names are automatically resolved to their corresponding `json` tag keys:
+
+### Request Example (Invalid Payload)
+
+```bash
+curl -X POST http://localhost:8080/api/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "A",
+    "email": "not-an-email",
+    "age": 16
+  }'
+```
+
+### Response Example (`422 Unprocessable Entity`)
+
+```json
+{
+  "detail": [
+    {
+      "loc": ["body", "name"],
+      "msg": "Input should have minimum length or value 2",
+      "type": "too_short",
+      "ctx": { "min": "2" }
+    },
+    {
+      "loc": ["body", "email"],
+      "msg": "Input should be a valid email address",
+      "type": "value_error.email"
+    },
+    {
+      "loc": ["body", "age"],
+      "msg": "Input should be greater than or equal to 18",
+      "type": "greater_than_equal",
+      "ctx": { "ge": "18" }
+    }
+  ]
+}
+```
+
+---
+
+## Context Retrieval Helpers
+
+Retrieve validated request payloads in your route handler using either the generic helper or raw context access:
+
+```go
+// 1. Generic type-safe retrieval (recommended)
+user, ok := ginfastapify.Body[CreateUserRequest](c)
+
+// 2. Standard interface retrieval
+rawUser, exists := ginfastapify.GetValidatedBody(c)
+user := rawUser.(*CreateUserRequest)
+
+// 3. Direct Gin context lookup
+raw := c.MustGet("validatedBody")
+user := raw.(*CreateUserRequest)
+```

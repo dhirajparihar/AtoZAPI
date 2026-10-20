@@ -1,0 +1,153 @@
+---
+title: "Express SDK"
+description: "Production-grade validation middleware and OpenAPI schema collector for Express.js."
+---
+
+# Express SDK (`@fastapify/express`)
+
+The `@fastapify/express` package brings FastAPI's declarative request validation and automatic OpenAPI documentation reflection to Express applications.
+
+---
+
+## Installation
+
+Install the middleware in your Node.js project:
+
+<CodeGroup>
+```bash npm
+npm install @fastapify/express
+```
+
+```bash yarn
+yarn add @fastapify/express
+```
+
+```bash pnpm
+pnpm add @fastapify/express
+```
+</CodeGroup>
+
+---
+
+## Complete Operational Example
+
+Here is a full Express application showing how to register schema rules, access validated parameters, and let Fastapify handle invalid inputs:
+
+```javascript server.js
+const express = require('express');
+const { fastapify } = require('@fastapify/express');
+
+const app = express();
+
+// Ensure body parser is mounted before route handlers
+app.use(express.json());
+
+// Define validation rules inline or as an exported object
+const createUserSchema = {
+  name: {
+    type: 'string',
+    required: true,
+    minLength: 2,
+    maxLength: 50,
+    description: 'User full legal name'
+  },
+  email: {
+    type: 'string',
+    required: true,
+    format: 'email',
+    description: 'Primary contact email'
+  },
+  age: {
+    type: 'number',
+    required: true,
+    min: 18,
+    max: 120,
+    description: 'User age in years'
+  },
+  tags: {
+    type: 'array',
+    required: false,
+    items: { type: 'string' }
+  }
+};
+
+// Mount the fastapify middleware directly onto the route definition
+app.post('/api/users', fastapify(createUserSchema), (req, res) => {
+  // Access sanitized, typed data directly on req.validatedBody
+  const { name, email, age, tags } = req.validatedBody;
+
+  res.status(201).json({
+    id: 101,
+    name,
+    email,
+    age,
+    tags: tags || [],
+    createdAt: new Date().toISOString()
+  });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server listening on http://localhost:${PORT}`);
+});
+```
+
+---
+
+## Automatic HTTP 422 Error Handling
+
+When incoming request data violates the schema, `fastapify` immediately halts execution and returns an HTTP 422 Unprocessable Entity response formatted according to the FastAPI/Pydantic standard:
+
+### Request Example (Invalid Payload)
+
+```bash
+curl -X POST http://localhost:3000/api/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "A",
+    "email": "invalid-email-address",
+    "age": 16
+  }'
+```
+
+### Response Example (`422 Unprocessable Entity`)
+
+```json
+{
+  "detail": [
+    {
+      "loc": ["body", "name"],
+      "msg": "String should have at least 2 characters",
+      "type": "string_too_short",
+      "ctx": { "min_length": 2 }
+    },
+    {
+      "loc": ["body", "email"],
+      "msg": "Input should be a valid email address",
+      "type": "value_error.email"
+    },
+    {
+      "loc": ["body", "age"],
+      "msg": "Input should be greater than or equal to 18",
+      "type": "greater_than_equal",
+      "ctx": { "ge": 18 }
+    }
+  ]
+}
+```
+
+---
+
+## Supported Schema Rules
+
+| Rule | Supported Types | Description | Example |
+| :--- | :--- | :--- | :--- |
+| `type` | All | Target primitive type (`string`, `number`, `integer`, `boolean`, `array`, `object`) | `{ type: 'string' }` |
+| `required` | All | Whether the field is mandatory (default: `true`) | `{ required: false }` |
+| `minLength` | `string` | Minimum string character length | `{ minLength: 3 }` |
+| `maxLength` | `string` | Maximum string character length | `{ maxLength: 255 }` |
+| `pattern` | `string` | Regex pattern matching | `{ pattern: '^[A-Z0-9]+$' }` |
+| `format` | `string` | Specialized string formats (`email`) | `{ format: 'email' }` |
+| `min` | `number`, `integer` | Minimum numeric value | `{ min: 0 }` |
+| `max` | `number`, `integer` | Maximum numeric value | `{ max: 100 }` |
+| `items` | `array` | Schema rule for array elements | `{ items: { type: 'string' } }` |

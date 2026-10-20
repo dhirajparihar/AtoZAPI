@@ -1,0 +1,79 @@
+---
+title: "Introduction"
+description: "FastAPI's magical auto-documentation and runtime validation, brought to every backend framework."
+---
+
+# Fastapify Overview
+
+FastAPI revolutionized the Python backend ecosystem with two defining features: **declarative runtime request validation** and **instant interactive OpenAPI/Swagger UI documentation at `/docs`**.
+
+Until now, developers using Node.js (Express), Next.js, Go (Gin), or PHP (Laravel) were forced to either write hundreds of lines of fragile boilerplate JSDoc/Swagger comments, maintain desynchronized manual YAML specs, or bolt together incompatible third-party libraries.
+
+**Fastapify eliminates that friction.** It delivers FastAPI's DX across every major backend environment without vendor lock-in or heavyweight runtime overhead.
+
+<Note>
+**The Fastapify Guarantee**: Write standard endpoint logic with native language types or schema definitions. Fastapify handles runtime validation, throws standard HTTP 422 errors on invalid input, and automatically compiles production-ready OpenAPI 3.0 documentation.
+</Note>
+
+---
+
+## Why Fastapify?
+
+<CardGroup cols={2}>
+  <Card title="Zero Manual Swagger Writing" icon="file-code">
+    Stop writing thousands of lines of verbose OpenAPI YAML or out-of-sync JSDoc annotations. Your code is the single source of truth.
+  </Card>
+  <Card title="Unified HTTP 422 Standard" icon="shield-check">
+    Standardized Pydantic-style validation error arrays (`{ detail: [{ loc, msg, type }] }`) across all microservices and languages.
+  </Card>
+  <Card title="Instant Interactive /docs" icon="browser">
+    Zero-config local documentation server hosting embedded Swagger UI and ReDoc out of the box.
+  </Card>
+  <Card title="Polyglot Native Syntax" icon="cube">
+    Native idiomatic idioms for each stack: middlewares in Express, Higher-Order Functions in Next.js, struct tags in Gin, and PHP 8 attributes in Laravel.
+  </Card>
+</CardGroup>
+
+---
+
+## Ecosystem Matrix
+
+Fastapify provides first-class support for the following backend ecosystems:
+
+| Framework | SDK Package | Validation Engine | Documentation Hook |
+| :--- | :--- | :--- | :--- |
+| **Node.js (Express)** | `@fastapify/express` | Lightweight Schema Engine | `fastapify(schema)` middleware |
+| **Next.js App Router** | `@fastapify/nextjs` | Web Stream Evaluator | `nextFastapify({ schema, handler })` |
+| **Go (Gin)** | `github.com/fastapify/sdk-go/gin` | Struct Reflection & Validator v10 | `ginfastapify.Guard(Struct{})` |
+| **PHP (Laravel)** | `fastapify/laravel` | Native PHP 8 Reflection & Validator | `#[Post(path, rules: [...])]` |
+
+---
+
+## The Architecture at a Glance
+
+```text
+[ Incoming Request ]
+         │
+         ▼
+[ Fastapify Guard / Middleware ]
+         │
+         ├─► Invalid? ──► HTTP 422 Unprocessable Entity ({ detail: [...] })
+         │
+         ▼ (Valid)
+[ Route Handler (req.validatedBody) ]
+```
+
+Simultaneously, the **Fastapify CLI** scans your codebase at build or dev time to compile an `openapi.json` contract and serve interactive Swagger UI documentation at `/docs`.
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="bolt" href="/quickstart">
+    Install the CLI and document your first endpoint in under 2 minutes.
+  </Card>
+  <Card title="SDK Reference" icon="code" href="/sdk/express">
+    Explore framework-specific integrations and API signatures.
+  </Card>
+</CardGroup>
