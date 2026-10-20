@@ -1,118 +1,85 @@
-# Fastapify
+# FastAPIfy
 
-[![CI](https://github.com/dhirajparihar/FastAPIfy/actions/workflows/ci.yml/badge.svg)](https://github.com/dhirajparihar/FastAPIfy/actions)
-[![NPM Version](https://img.shields.io/npm/v/@fastapify/express?color=blue)](https://www.npmjs.com/package/@fastapify/express)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![OpenAPI 3.0](https://img.shields.io/badge/OpenAPI-3.0.3-teal.svg)](https://swagger.io/specification/)
-[![Platforms](https://img.shields.io/badge/Platforms-Express%20%7C%20Next.js%20%7C%20Gin%20%7C%20Laravel-blueviolet.svg)](#monorepo-architecture)
+<p align="center">
+  <strong>FastAPI's developer experience — brought to Express, Next.js, Go (Gin), and Laravel.</strong>
+</p>
 
-> FastAPI's automatic request validation and interactive Swagger UI / OpenAPI documentation at `/docs`, brought to Express, Next.js, Go (Gin), and PHP (Laravel).
+<p align="center">
+  <a href="https://github.com/dhirajparihar/FastAPIfy/actions/workflows/ci.yml"><img src="https://github.com/dhirajparihar/FastAPIfy/actions/workflows/ci.yml/badge.svg" alt="CI Status" /></a>
+  <a href="https://www.npmjs.com/package/@fastapify/cli"><img src="https://img.shields.io/npm/v/@fastapify/cli?color=3159D9&label=npm%20cli" alt="NPM CLI Version" /></a>
+  <a href="https://packagist.org/packages/fastapify/laravel"><img src="https://img.shields.io/packagist/v/fastapify/laravel?color=F05340&label=packagist" alt="Packagist Version" /></a>
+  <a href="https://pkg.go.dev/github.com/dhirajparihar/FastAPIfy/sdk-go/gin"><img src="https://img.shields.io/badge/go.dev-v1.0.0-00ADD8?logo=go&logoColor=white" alt="Go Reference" /></a>
+  <a href="https://dhirajparihar.github.io/FastAPIfy/"><img src="https://img.shields.io/badge/docs-live-10B981" alt="Documentation" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
+</p>
+
+<p align="center">
+  <a href="https://dhirajparihar.github.io/FastAPIfy/">Documentation</a> •
+  <a href="#quickstart-in-60-seconds">Quickstart</a> •
+  <a href="#polyglot-ecosystem-sdks">SDKs</a> •
+  <a href="#http-422-error-parity">Error Parity</a> •
+  <a href="#standalone-native-binaries-zero-node">Standalone Binaries</a>
+</p>
 
 ---
 
-## Before vs. After Fastapify
+## Why FastAPIfy?
 
-| Traditional Manual Boilerplate | With Fastapify |
+FastAPI revolutionized the Python world with two core superpowers: **declarative runtime validation** and **instant interactive documentation at `/docs`**.
+
+In other languages, developers are usually stuck maintaining brittle OpenAPI/Swagger YAML annotations, keeping JSDoc comments synchronized, or writing tedious input validation boilerplate.
+
+**FastAPIfy eliminates that friction.** Write your routes with standard schemas or struct tags:
+1. **Zero manual Swagger writing**: Your route code is the single source of truth.
+2. **Unified HTTP 422 standard**: Every framework returns the exact Pydantic-style `{ detail: [...] }` response.
+3. **Interactive documentation**: Embedded Swagger UI and ReDoc live at `http://localhost:8000/docs`.
+
+---
+
+## Before vs. After FastAPIfy
+
+| Traditional Manual Boilerplate (Express) | With FastAPIfy |
 | :--- | :--- |
-| ```javascript<br>/**<br> * @swagger<br> * /api/users:<br> *   post:<br> *     summary: Create user<br> *     requestBody:<br> *       required: true<br> *       content: ... (30+ lines)<br> */<br>app.post('/api/users', (req, res) => {<br>  if (!req.body.name) return res.status(400)...<br>  if (req.body.name.length < 2) return ...<br>  if (!req.body.age) return res.status(400)...<br>  if (req.body.age < 18) return res.status(400)...<br>  // 20 lines of repetitive validation<br>});<br>``` | ```javascript<br>const schema = {<br>  name: { type: 'string', required: true, minLength: 2 },<br>  age: { type: 'number', required: true, min: 18 }<br>};<br><br>app.post('/api/users', fastapify(schema), (req, res) => {<br>  // 1. Automatic HTTP 422 on invalid input<br>  // 2. Verified payload on req.validatedBody<br>  // 3. Auto-generated /docs interactive Swagger UI<br>  res.status(201).json(req.validatedBody);<br>});<br>``` |
+| ```javascript<br>/**<br> * @swagger<br> * /api/users:<br> *   post:<br> *     summary: Create user<br> *     requestBody:<br> *       required: true<br> *       content: ... (30+ lines)<br> */<br>app.post('/api/users', (req, res) => {<br>  if (!req.body.name) return res.status(400)...<br>  if (req.body.name.length < 2) return ...<br>  if (!req.body.age) return res.status(400)...<br>  if (req.body.age < 18) return res.status(400)...<br>  // 25 lines of repetitive checks<br>});<br>``` | ```javascript<br>const schema = {<br>  name: { type: 'string', required: true, minLength: 2 },<br>  age: { type: 'number', required: true, min: 18 }<br>};<br><br>app.post('/api/users', fastapify(schema), (req, res) => {<br>  // 1. Automatic HTTP 422 on invalid input<br>  // 2. Typed, verified data on req.validatedBody<br>  // 3. Auto-generated /docs interactive Swagger UI<br>  res.status(201).json(req.validatedBody);<br>});<br>``` |
 
 ---
 
-## Architecture Flow
+## Quickstart in 60 Seconds
 
-```text
-Incoming Request
-       │
-       ▼
-[ Fastapify Middleware / Guard ]
-       │
-       ├─► Invalid Payload? ──► HTTP 422 Unprocessable Entity
-       │                        { "detail": [{ "loc": ["body", "field"], "msg": "...", "type": "..." }] }
-       │
-       ▼ Valid Payload
-[ Route Controller ] ─────────► Process Verified Data (req.validatedBody)
-       ▲
-       │
-[ Fastapify CLI Scanner ] ────► Statically compiles openapi.json & serves /docs (Swagger UI)
-```
-
----
-
-## Monorepo Architecture
-
-```text
-fastapify/
-├── package.json                   # Root monorepo workspace configuration
-├── openapi.json                   # Auto-generated OpenAPI 3.0 specification
-├── cli/                           # Core workspace scanner engine & Swagger UI server
-│   ├── index.js                   # CLI tool that generates openapi.json and hosts /docs
-│   └── package.json
-├── sdk-js/
-│   ├── express/
-│   │   ├── index.js               # Express middleware logic (fastapify)
-│   │   └── package.json
-│   └── nextjs/
-│       ├── index.js               # Next.js App Router higher-order wrapper (nextFastapify)
-│       └── package.json
-├── sdk-go/
-│   └── gin/
-│       ├── fastapify.go           # Gin middleware logic (ginfastapify.Guard)
-│       └── go.mod
-├── sdk-php/
-│   └── laravel/
-│       ├── composer.json          # Composer configuration (fastapify/laravel)
-│       └── src/
-│           ├── Attributes/Post.php # Native PHP 8 #[Post] attribute
-│           └── Middleware/FastapifyMiddleware.php # Laravel reflection & 422 validator
-└── examples/
-    ├── express-app/
-    │   ├── server.js              # Sample Express app
-    │   └── package.json
-    ├── nextjs-app/
-    │   ├── app/api/users/route.js # Sample Next.js App Router API route
-    │   └── package.json
-    ├── go-app/
-    │   ├── main.go                # Sample Gin app
-    │   └── go.mod
-    └── laravel-app/
-        └── app/Http/Controllers/UserController.php # Sample Laravel controller
-```
-
----
-
-## 60-Second Quickstart
+Run the FastAPIfy scanner anywhere to discover routes, generate `openapi.json`, and host the Swagger UI server:
 
 ```bash
-# 1. Install CLI
+# Instant execution with npx
+npx @fastapify/cli
+
+# Or install globally
 npm install -g @fastapify/cli
-
-# 2. Run documentation server in any project
 fastapify
-# -> Interactive Swagger UI live at http://localhost:8000/docs
 ```
 
-Run the Fastapify CLI to scan the codebase, compile `openapi.json`, and serve the interactive documentation:
-
-```bash
-# Generate openapi.json and launch docs server on http://localhost:8000
-npm run docs
-
-# Or generate spec without starting the server
-npm run generate
+Output:
+```text
+[fastapify] Scanning /path/to/project
+[fastapify] Discovered 4 route(s):
+  POST   /api/users           (express) -> server.js
+  POST   /api/products        (nextjs)  -> app/api/products/route.js
+  POST   /api/v1/orders       (gin)     -> main.go
+  POST   /api/v1/checkout     (laravel) -> app/Http/Controllers/CheckoutController.php
+[fastapify] Saved OpenAPI specification to openapi.json
+[fastapify] Server running on http://localhost:8000
+[fastapify] Docs:     http://localhost:8000/docs
+[fastapify] ReDoc:    http://localhost:8000/redoc
+[fastapify] Spec:     http://localhost:8000/openapi.json
 ```
-
-- **Interactive Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **Alternative ReDoc UI**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
-- **Raw OpenAPI Spec**: [http://localhost:8000/openapi.json](http://localhost:8000/openapi.json)
 
 ---
 
-### 2. Express Integration (`@fastapify/express`)
+## Polyglot Ecosystem SDKs
 
-The `fastapify(schema)` middleware performs runtime structural checks against `req.body`:
-- Returns standardized **HTTP 422 Unprocessable Entity** with FastAPI-compatible `{ detail: [...] }` payload on validation failure.
-- Attaches the verified, sanitized data to `req.validatedBody` and forwards execution.
-
+### 1. Express (Node.js)
+```bash
+npm install @fastapify/express
+```
 ```javascript
 const express = require('express');
 const { fastapify } = require('@fastapify/express');
@@ -120,87 +87,42 @@ const { fastapify } = require('@fastapify/express');
 const app = express();
 app.use(express.json());
 
-const userSchema = {
+const schema = {
   name: { type: 'string', required: true, minLength: 2 },
-  age: { type: 'number', required: true, min: 18, max: 120 }
+  age: { type: 'number', required: true, min: 18 }
 };
 
-app.post('/api/users', fastapify(userSchema), (req, res) => {
-  const { name, age } = req.validatedBody;
-  res.status(201).json({ success: true, user: { name, age } });
+app.post('/api/users', fastapify(schema), (req, res) => {
+  res.status(201).json({ user: req.validatedBody });
 });
-
-app.listen(3000);
 ```
 
-#### Run the Express Example:
+### 2. Next.js App Router
 ```bash
-npm run example:express
+npm install @fastapify/nextjs
 ```
-
-Test an invalid request (triggering 422):
-```bash
-curl -X POST http://localhost:3000/api/users \
-  -H "Content-Type: application/json" \
-  -d '{"name": "A", "age": 12}'
-```
-
-Response:
-```json
-{
-  "detail": [
-    {
-      "loc": ["body", "name"],
-      "msg": "String should have at least 2 characters",
-      "type": "string_too_short",
-      "ctx": { "min_length": 2 }
-    },
-    {
-      "loc": ["body", "age"],
-      "msg": "Input should be greater than or equal to 18",
-      "type": "greater_than_equal",
-      "ctx": { "ge": 18 }
-    }
-  ]
-}
-```
-
----
-
-### 3. Next.js App Router Integration (`@fastapify/nextjs`)
-
-The `nextFastapify({ schema, handler })` wrapper intercepts incoming standard Web Fetch `Request` streams:
-- Evaluates the payload structure against the schema.
-- Throws/returns HTTP 422 response immediately on typing mismatches.
-- Passes verified data into `handler(req, { validatedBody })` seamlessly.
-
-`app/api/users/route.js`:
 ```javascript
-const { nextFastapify } = require('@fastapify/nextjs');
+// app/api/users/route.js
+import { nextFastapify } from '@fastapify/nextjs';
+import { NextResponse } from 'next/server';
 
-const userSchema = {
-  name: { type: 'string', required: true, minLength: 2 },
-  age: { type: 'number', required: true, min: 18, max: 120 }
+const schema = {
+  email: { type: 'string', required: true, pattern: '^[^@]+@[^@]+\\.[^@]+$' },
+  age: { type: 'number', required: true, min: 18 }
 };
 
 export const POST = nextFastapify({
-  schema: userSchema,
+  schema,
   handler: async (req, { validatedBody }) => {
-    return Response.json({
-      success: true,
-      user: validatedBody
-    }, { status: 201 });
+    return NextResponse.json({ success: true, user: validatedBody }, { status: 201 });
   }
 });
 ```
 
-### 4. Go / Gin Integration (`github.com/dhirajparihar/FastAPIfy/sdk-go/gin`)
-
-The `ginfastapify.Guard(schema)` middleware intercepts incoming Gin requests (`c.ShouldBindJSON`):
-- Reflectively instantiates and validates the request body against struct tags (`binding:"required,gte=18"`).
-- On validation failure, aborts immediately and returns standardized **HTTP 422 Unprocessable Entity** with FastAPI-compatible `{ detail: [...] }` payload.
-- On success, stores the verified struct in the context key `"validatedBody"` (retrievable via `ginfastapify.Body[T](c)` or `ginfastapify.GetValidatedBody(c)`).
-
+### 3. Go (Gin)
+```bash
+go get github.com/dhirajparihar/FastAPIfy/sdk-go/gin@v1.0.0
+```
 ```go
 package main
 
@@ -210,16 +132,16 @@ import (
     "github.com/gin-gonic/gin"
 )
 
-type User struct {
-    Name string `json:"name" binding:"required"`
-    Age  int    `json:"age" binding:"required,gte=18"`
+type CreateUserRequest struct {
+    Name string `json:"name" binding:"required,min=2"`
+    Age  int    `json:"age"  binding:"required,gte=18"`
 }
 
 func main() {
     r := gin.Default()
 
-    r.POST("/api/users", ginfastapify.Guard(User{}), func(c *gin.Context) {
-        user, _ := ginfastapify.Body[User](c)
+    r.POST("/api/users", ginfastapify.Guard(CreateUserRequest{}), func(c *gin.Context) {
+        user, _ := ginfastapify.Body[CreateUserRequest](c)
         c.JSON(http.StatusCreated, gin.H{"user": user})
     })
 
@@ -227,44 +149,72 @@ func main() {
 }
 ```
 
----
-
-### 5. PHP 8+ / Laravel Integration (`fastapify/laravel`)
-
-Use the native PHP 8 attribute `#[Post]` to tag controller methods with route paths and validation rules:
-- `FastapifyMiddleware` uses PHP's `ReflectionMethod` to discover attributes on incoming requests.
-- Validates `$request->all()` via Laravel's `Validator`.
-- If validation fails, halts processing and returns an **HTTP 422 Unprocessable Entity** response array mimicking FastAPI.
-- If successful, merges verified properties into the `$request` parameters and passes execution to the controller.
-
+### 4. PHP (Laravel)
+```bash
+composer require fastapify/laravel
+```
 ```php
 namespace App\Http\Controllers;
 
 use Fastapify\Laravel\Attributes\Post;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class UserController
 {
     #[Post(
         path: '/api/users',
-        summary: 'Register a new user',
+        summary: 'Create user',
         rules: [
             'name' => 'required|string|min:2',
-            'age' => 'required|integer|min:18|max:120'
+            'age'  => 'required|integer|min:18'
         ]
     )]
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->attributes->get('validatedBody');
-
-        return response()->json([
-            'success' => true,
-            'user' => $validated
-        ], 201);
+        $user = $request->attributes->get('validatedBody');
+        return response()->json(['user' => $user], 201);
     }
 }
 ```
+
+---
+
+## HTTP 422 Error Parity
+
+When validation fails, all FastAPIfy SDKs intercept the request and return the exact Pydantic/FastAPI error format:
+
+```json
+{
+  "detail": [
+    {
+      "loc": ["body", "age"],
+      "msg": "Input should be greater than or equal to 18",
+      "type": "greater_than_equal",
+      "ctx": { "ge": 18 }
+    },
+    {
+      "loc": ["body", "email"],
+      "msg": "Input should be a valid email address",
+      "type": "value_error.email"
+    }
+  ]
+}
+```
+
+---
+
+## Standalone Native Binaries (Zero-Node)
+
+For Go and PHP developers who prefer not to install Node.js or `npm`, single-file standalone native executables are provided for every release:
+
+| Platform | Binary Asset |
+| :--- | :--- |
+| **Windows (x64)** | `fastapify-win-x64.exe` |
+| **Linux (x64)** | `fastapify-linux-x64` |
+| **macOS (x64)** | `fastapify-macos-x64` |
+
+Download them directly from the **[GitHub Releases](https://github.com/dhirajparihar/FastAPIfy/releases)** page.
 
 ---
 
@@ -275,7 +225,7 @@ fastapify [command] [options]
 
 Commands:
   serve       Scan codebase, compile openapi.json, and launch docs server (default)
-  generate    Scan codebase and compile openapi.json file only
+  generate    Scan codebase and compile openapi.json file only (ideal for CI/CD)
 
 Options:
   -p, --port <number>   Docs server port (default: 8000)
@@ -283,5 +233,15 @@ Options:
   -o, --out <path>      Path to output openapi.json (default: ./openapi.json)
 ```
 
+---
+
+## Documentation
+
+Full guides, configuration details, and language SDK references are available on our documentation platform:
+👉 **[https://dhirajparihar.github.io/FastAPIfy/](https://dhirajparihar.github.io/FastAPIfy/)**
+
+---
+
 ## License
-MIT
+
+[MIT](LICENSE) © FastAPIfy Authors
