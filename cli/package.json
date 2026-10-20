@@ -1,5 +1,5 @@
 {
-  "name": "fastapify",
+  "name": "@fastapify/cli",
   "version": "0.1.0",
   "description": "Fastapify CLI - Automatic OpenAPI generation and Swagger UI server for polyglot backends",
   "main": "index.js",

@@ -84,7 +84,7 @@ fastapify/
 
 ```bash
 # 1. Install CLI
-npm install -g fastapify
+npm install -g @fastapify/cli
 
 # 2. Run documentation server in any project
 fastapify
