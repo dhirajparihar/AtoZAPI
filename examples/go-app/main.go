@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	ginfastapify "github.com/fastapify/sdk-go/gin"
+	ginfastapify "github.com/dhirajparihar/FastAPIfy/sdk-go/gin"
 	"github.com/gin-gonic/gin"
 )
 

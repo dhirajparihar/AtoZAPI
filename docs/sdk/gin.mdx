@@ -3,7 +3,7 @@ title: "Go (Gin) SDK"
 description: "Thread-safe struct reflection and validation Guard middleware for Gin web applications."
 ---
 
-# Go (Gin) SDK (`github.com/fastapify/sdk-go/gin`)
+# Go (Gin) SDK (`github.com/dhirajparihar/FastAPIfy/sdk-go/gin`)
 
 The `ginfastapify` package provides reflection-driven middleware for the Gin web framework. It intercepts incoming JSON requests, validates them against native Go struct binding tags, returns standardized FastAPI HTTP 422 error payloads, and attaches verified data to the Gin request context.
 
@@ -14,7 +14,7 @@ The `ginfastapify` package provides reflection-driven middleware for the Gin web
 Add the module to your Go project:
 
 ```bash
-go get github.com/fastapify/sdk-go/gin
+go get github.com/dhirajparihar/FastAPIfy/sdk-go/gin
 ```
 
 Ensure your `go.mod` specifies Go 1.20+:
@@ -25,7 +25,7 @@ module my-api
 go 1.22
 
 require (
-    github.com/fastapify/sdk-go/gin v0.1.0
+    github.com/dhirajparihar/FastAPIfy/sdk-go/gin v0.1.0
     github.com/gin-gonic/gin v1.9.1
 )
 ```

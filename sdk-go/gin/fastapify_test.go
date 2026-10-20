@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	ginfastapify "github.com/fastapify/sdk-go/gin"
+	ginfastapify "github.com/dhirajparihar/FastAPIfy/sdk-go/gin"
 	"github.com/gin-gonic/gin"
 )
 
