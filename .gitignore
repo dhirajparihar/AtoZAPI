@@ -7,6 +7,7 @@ dist/
 build/
 .next/
 out/
+site/
 
 # Caches and coverage
 .turbo/
