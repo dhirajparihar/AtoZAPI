@@ -1,20 +1,20 @@
 <?php
 
-namespace Fastapify\Laravel\Middleware;
+namespace Atozapi\Laravel\Middleware;
 
 use Closure;
-use Fastapify\Laravel\Attributes\Post;
+use Atozapi\Laravel\Attributes\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use ReflectionMethod;
 
 /**
- * FastapifyMiddleware
- * Inspects route controller methods via PHP 8 Reflection for Fastapify attributes,
+ * AtozapiMiddleware
+ * Inspects route controller methods via PHP 8 Reflection for AtoZAPI attributes,
  * executes automatic validation, and enforces FastAPI-standard HTTP 422 response formatting.
  */
-class FastapifyMiddleware
+class AtozapiMiddleware
 {
     /**
      * Handle an incoming request.

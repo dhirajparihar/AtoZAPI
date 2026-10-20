@@ -1,0 +1,170 @@
+---
+title: "Schema Reference"
+description: "Comprehensive guide to AtoZAPI data types, validation constraints, and multi-framework syntax."
+---
+
+# Schema & Validation Reference
+
+AtoZAPI uses a unified, declarative schema syntax that powers both **runtime input validation** (returning FastAPI-standard HTTP 422 errors) and **automatic OpenAPI 3.0 / Swagger UI documentation generation**.
+
+---
+
+## Supported Data Types
+
+AtoZAPI schemas support the following core primitive and composite data types:
+
+| Type | OpenAPI 3.0 Mapping | Description |
+| :--- | :--- | :--- |
+| `string` | `{ "type": "string" }` | Text values, UTF-8 strings, emails, UUIDs |
+| `number` | `{ "type": "number" }` | Floating-point decimal numbers |
+| `integer` / `int` | `{ "type": "integer" }` | Whole numbers |
+| `boolean` / `bool` | `{ "type": "boolean" }` | `true` or `false` boolean values |
+| `array` / `list` | `{ "type": "array" }` | Lists/arrays of items (defined via `items`) |
+| `object` | `{ "type": "object" }` | Nested JSON objects (defined via `properties`) |
+
+---
+
+## Validation Constraints & Rules
+
+Attach these properties to any field definition in your schema:
+
+| Rule | Type | Applicable Types | Description | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `required` | `boolean` | All | Whether the field is mandatory (default: `true`) | `required: true` |
+| `optional` | `boolean` | All | Inverse of `required`; skips validation if omitted | `optional: true` |
+| `minLength` | `number` | `string` | Minimum character length | `minLength: 3` |
+| `maxLength` | `number` | `string` | Maximum character length | `maxLength: 100` |
+| `min` | `number` | `number`, `integer` | Minimum numeric value (inclusive) | `min: 0` |
+| `max` | `number` | `number`, `integer` | Maximum numeric value (inclusive) | `max: 120` |
+| `pattern` | `string` \| `RegExp` | `string` | Regex expression the value must match | `pattern: '^[A-Z0-9]+$'` |
+| `format` | `string` | `string` | Semantic format (e.g., `email`, `uuid`, `uri`, `date-time`) | `format: 'email'` |
+| `items` | `object` | `array` | Schema definition for array elements | `items: { type: 'string' }` |
+| `properties` | `object` | `object` | Sub-schema properties for nested objects | `properties: { city: { type: 'string' } }` |
+| `description` | `string` | All | Human-readable documentation for Swagger UI | `description: 'Primary email'` |
+| `default` | `any` | All | Default fallback value if not provided | `default: 'active'` |
+
+---
+
+## Multi-Framework Syntax Comparison
+
+AtoZAPI allows you to write schemas in the native idiomatic style of your backend language:
+
+### 1. JavaScript & TypeScript (Express & Next.js)
+
+```javascript
+const userRegistrationSchema = {
+  name: {
+    type: 'string',
+    required: true,
+    minLength: 2,
+    maxLength: 50,
+    description: 'User full name'
+  },
+  email: {
+    type: 'string',
+    required: true,
+    format: 'email',
+    description: 'Valid contact email'
+  },
+  age: {
+    type: 'number',
+    required: true,
+    min: 18,
+    max: 120,
+    description: 'Age in years'
+  },
+  role: {
+    type: 'string',
+    optional: true,
+    default: 'member',
+    description: 'Access role'
+  },
+  tags: {
+    type: 'array',
+    optional: true,
+    items: { type: 'string' },
+    description: 'Profile tags'
+  },
+  address: {
+    type: 'object',
+    optional: true,
+    properties: {
+      street: { type: 'string', required: true },
+      city: { type: 'string', required: true },
+      zipCode: { type: 'string', required: true, pattern: '^[0-9]{5}$' }
+    }
+  }
+};
+```
+
+### 2. Go (Gin) Struct Tags
+
+In Go, use standard struct tags with `json` and `binding` directives:
+
+```go
+type UserRegistrationRequest struct {
+    Name    string   `json:"name" binding:"required,min=2,max=50"`
+    Email   string   `json:"email" binding:"required,email"`
+    Age     int      `json:"age" binding:"required,gte=18,lte=120"`
+    Role    string   `json:"role" binding:"omitempty"`
+    Tags    []string `json:"tags" binding:"omitempty"`
+}
+```
+
+Supported Go binding rules:
+- `required` / `omitempty`
+- `min=N` / `max=N` (for strings, slices, or numbers)
+- `gte=N` / `lte=N` / `gt=N` / `lt=N`
+- `email`
+
+### 3. PHP (Laravel) Controller Attributes
+
+In Laravel, pass standard Laravel validation rule strings into the `#[Post]` attribute:
+
+```php
+#[Post(
+    path: '/api/users',
+    summary: 'Register new user',
+    rules: [
+        'name'  => 'required|string|min:2|max:50',
+        'email' => 'required|email',
+        'age'   => 'required|integer|min:18|max:120',
+        'role'  => 'string',
+        'tags'  => 'array',
+    ]
+)]
+public function store(Request $request): JsonResponse
+{
+    // ...
+}
+```
+
+---
+
+## Standardized HTTP 422 Error Format
+
+When a field fails validation against the schema, AtoZAPI halts execution and returns a standardized error matching FastAPI's Pydantic model:
+
+```json
+{
+  "detail": [
+    {
+      "loc": ["body", "age"],
+      "msg": "Input should be greater than or equal to 18",
+      "type": "greater_than_equal",
+      "ctx": { "ge": 18 }
+    },
+    {
+      "loc": ["body", "email"],
+      "msg": "Input should be a valid email address",
+      "type": "value_error.email"
+    }
+  ]
+}
+```
+
+Each item in `detail` includes:
+- `loc`: Array describing the path to the invalid field (e.g., `["body", "field_name"]`).
+- `msg`: Clear, user-friendly validation error message.
+- `type`: Machine-readable error code (e.g. `missing`, `greater_than_equal`, `string_too_short`, `value_error.email`).
+- `ctx`: Optional context parameters (such as minimum limit `ge` or character count `min_length`).

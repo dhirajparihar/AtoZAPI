@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Fastapify CLI
+ * AtoZAPI CLI
  * Core workspace scanner engine, OpenAPI compiler, and localized Swagger UI server.
  */
 
@@ -53,7 +53,7 @@ function findFiles(dir, extensions = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.go
 }
 
 /**
- * Parses Laravel attribute validation rules into Fastapify schema.
+ * Parses Laravel attribute validation rules into AtoZAPI schema.
  */
 function parseLaravelRulesSchema(rulesStr) {
   if (!rulesStr) return null;
@@ -107,7 +107,7 @@ function parseLaravelRulesSchema(rulesStr) {
 }
 
 /**
- * Parses Go struct definitions and tags (json, binding) into Fastapify schema.
+ * Parses Go struct definitions and tags (json, binding) into AtoZAPI schema.
  */
 function parseGoStructSchema(structName, content) {
   const structRegex = new RegExp(`type\\s+${structName}\\s+struct\\s*\\{([\\s\\S]*?)\\}`, 'm');
@@ -325,7 +325,7 @@ function buildOpenAPIRequestBody(rawSchema, modelName = 'UserPayload') {
   }
 
   return {
-    description: 'JSON request payload validated by fastapify',
+    description: 'JSON request payload validated by AtoZAPI',
     required: true,
     content: {
       'application/json': {
@@ -350,9 +350,9 @@ function scanCodebaseForRoutes(rootDir) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const relativePath = path.relative(rootDir, filePath).replace(/\\/g, '/');
 
-    // 1. Check for Express patterns: app.post('/api/users', fastapify(schema), ...)
+    // 1. Check for Express patterns: app.post('/api/users', atozapi(schema), ...)
     // Or router.post(...)
-    const expressRegex = /(?:app|router)\.(post|get|put|delete|patch)\(\s*['"`]([^'"`]+)['"`]\s*,\s*fastapify\(([\s\S]*?)\)\s*(?:,|\))/g;
+    const expressRegex = /(?:app|router)\.(post|get|put|delete|patch)\(\s*['"`]([^'"`]+)['"`]\s*,\s*atozapi\(([\s\S]*?)\)\s*(?:,|\))/g;
     let match;
     while ((match = expressRegex.exec(content)) !== null) {
       const method = match[1].toLowerCase();
@@ -378,8 +378,8 @@ function scanCodebaseForRoutes(rootDir) {
         .replace(/\/route\.(js|ts|mjs)$/, '');
       const cleanRoutePath = routeSub.startsWith('/') ? routeSub : `/${routeSub}`;
 
-      // Pattern A: (const|export const) POST = nextFastapify({ schema: ..., handler: ... })
-      const nextPattern = /(?:export\s+)?(?:const|let|var|async\s+function)\s+(GET|POST|PUT|DELETE|PATCH)\s*=\s*nextFastapify\(\s*\{([\s\S]*?)\}\s*\)/g;
+      // Pattern A: (const|export const) POST = nextAtozapi({ schema: ..., handler: ... })
+      const nextPattern = /(?:export\s+)?(?:const|let|var|async\s+function)\s+(GET|POST|PUT|DELETE|PATCH)\s*=\s*nextAtozapi\(\s*\{([\s\S]*?)\}\s*\)/g;
       let nextMatch;
       while ((nextMatch = nextPattern.exec(content)) !== null) {
         const method = nextMatch[1].toLowerCase();
@@ -398,8 +398,8 @@ function scanCodebaseForRoutes(rootDir) {
         });
       }
 
-      // Pattern B: (const|export const) POST = nextFastapify(schema, handler)
-      const nextDirectPattern = /(?:export\s+)?(?:const|let|var|async\s+function)\s+(GET|POST|PUT|DELETE|PATCH)\s*=\s*nextFastapify\(\s*([^,\n]+|\{[\s\S]*?\})\s*,\s*(?:async\s*)?\(/g;
+      // Pattern B: (const|export const) POST = nextAtozapi(schema, handler)
+      const nextDirectPattern = /(?:export\s+)?(?:const|let|var|async\s+function)\s+(GET|POST|PUT|DELETE|PATCH)\s*=\s*nextAtozapi\(\s*([^,\n]+|\{[\s\S]*?\})\s*,\s*(?:async\s*)?\(/g;
       let directMatch;
       while ((directMatch = nextDirectPattern.exec(content)) !== null) {
         const method = directMatch[1].toLowerCase();
@@ -416,9 +416,9 @@ function scanCodebaseForRoutes(rootDir) {
       }
     }
 
-    // 3. Check for Go (Gin) patterns: r.POST("/api/users", ginfastapify.Guard(User{}), ...)
+    // 3. Check for Go (Gin) patterns: r.POST("/api/users", ginatozapi.Guard(User{}), ...)
     if (filePath.endsWith('.go')) {
-      const ginRegex = /(?:r|router|app|engine|group)\.(POST|GET|PUT|DELETE|PATCH)\(\s*["`]([^"`]+)["`]\s*,\s*ginfastapify\.Guard\((?:&)?([a-zA-Z0-9_]+)(?:\{\})?\)/g;
+      const ginRegex = /(?:r|router|app|engine|group)\.(POST|GET|PUT|DELETE|PATCH)\(\s*["`]([^"`]+)["`]\s*,\s*(?:ginatozapi|atozapi)\.Guard\((?:&)?([a-zA-Z0-9_]+)(?:\{\})?\)/g;
       let ginMatch;
       while ((ginMatch = ginRegex.exec(content)) !== null) {
         const method = ginMatch[1].toLowerCase();
@@ -466,9 +466,9 @@ function compileOpenAPISpec(routes, options = {}) {
   const spec = {
     openapi: '3.0.3',
     info: {
-      title: options.title || 'Fastapify API Docs',
+      title: options.title || 'AtoZAPI Docs',
       version: options.version || '1.0.0',
-      description: options.description || 'Interactive API documentation generated automatically by Fastapify across polyglot backends.'
+      description: options.description || 'Interactive API documentation generated automatically by AtoZAPI across polyglot backends.'
     },
     paths: {},
     components: {
@@ -583,7 +583,7 @@ function compileOpenAPISpec(routes, options = {}) {
 /**
  * Returns HTML string template rendering Swagger UI.
  */
-function renderSwaggerUIHtml(title = 'Fastapify - Swagger UI', specUrl = '/openapi.json') {
+function renderSwaggerUIHtml(title = 'AtoZAPI - Swagger UI', specUrl = '/openapi.json') {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -609,8 +609,8 @@ function renderSwaggerUIHtml(title = 'Fastapify - Swagger UI', specUrl = '/opena
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text);
     }
-    /* Sleek FastAPIfy Top Header */
-    .fastapify-header {
+    /* Sleek AtoZAPI Top Header */
+    .atozapi-header {
       background: #FFFFFF;
       border-bottom: 1px solid var(--border);
       padding: 0.75rem 2rem;
@@ -733,10 +733,10 @@ function renderSwaggerUIHtml(title = 'Fastapify - Swagger UI', specUrl = '/opena
   </style>
 </head>
 <body>
-  <header class="fastapify-header">
+  <header class="atozapi-header">
     <div class="brand-wrap">
-      <div class="brand-badge">F</div>
-      <span class="brand-name">FastAPIfy</span>
+      <div class="brand-badge">A</div>
+      <span class="brand-name">AtoZAPI</span>
       <span class="brand-sub">Interactive Documentation</span>
     </div>
     <div class="header-links">
@@ -769,7 +769,7 @@ function renderSwaggerUIHtml(title = 'Fastapify - Swagger UI', specUrl = '/opena
 /**
  * Returns HTML string template rendering Redoc alternative.
  */
-function renderRedocHtml(title = 'Fastapify - ReDoc', specUrl = '/openapi.json') {
+function renderRedocHtml(title = 'AtoZAPI - ReDoc', specUrl = '/openapi.json') {
   return `<!DOCTYPE html>
 <html>
   <head>
@@ -781,7 +781,7 @@ function renderRedocHtml(title = 'Fastapify - ReDoc', specUrl = '/openapi.json')
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
       body { margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-      .fastapify-header {
+      .atozapi-header {
         background: #FFFFFF;
         border-bottom: 1px solid #E2E8F0;
         padding: 0.75rem 2rem;
@@ -812,10 +812,10 @@ function renderRedocHtml(title = 'Fastapify - ReDoc', specUrl = '/openapi.json')
     </style>
   </head>
   <body>
-    <header class="fastapify-header">
+    <header class="atozapi-header">
       <div class="brand-wrap">
-        <div class="brand-badge">F</div>
-        <span class="brand-name">FastAPIfy</span>
+        <div class="brand-badge">A</div>
+        <span class="brand-name">AtoZAPI</span>
         <span class="brand-sub">API Reference</span>
       </div>
       <div class="header-links">
@@ -849,13 +849,13 @@ function startServer(spec, port = DEFAULT_PORT) {
 
     if (pathname === '/docs') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(renderSwaggerUIHtml('Fastapify - Swagger UI', '/openapi.json'));
+      res.end(renderSwaggerUIHtml('AtoZAPI - Swagger UI', '/openapi.json'));
       return;
     }
 
     if (pathname === '/redoc') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(renderRedocHtml('Fastapify - ReDoc', '/openapi.json'));
+      res.end(renderRedocHtml('AtoZAPI - ReDoc', '/openapi.json'));
       return;
     }
 
@@ -870,10 +870,10 @@ function startServer(spec, port = DEFAULT_PORT) {
   });
 
   server.listen(port, () => {
-    console.log(`[fastapify] Server running on http://localhost:${port}`);
-    console.log(`[fastapify] Docs:     http://localhost:${port}/docs`);
-    console.log(`[fastapify] ReDoc:    http://localhost:${port}/redoc`);
-    console.log(`[fastapify] Spec:     http://localhost:${port}/openapi.json`);
+    console.log(`[atozapi] Server running on http://localhost:${port}`);
+    console.log(`[atozapi] Docs:     http://localhost:${port}/docs`);
+    console.log(`[atozapi] ReDoc:    http://localhost:${port}/redoc`);
+    console.log(`[atozapi] Spec:     http://localhost:${port}/openapi.json`);
   });
 
   return server;
@@ -902,16 +902,16 @@ function main() {
     }
   }
 
-  console.log(`[fastapify] Scanning ${targetDir}`);
+  console.log(`[atozapi] Scanning ${targetDir}`);
   const routes = scanCodebaseForRoutes(targetDir);
-  console.log(`[fastapify] Discovered ${routes.length} route(s):`);
+  console.log(`[atozapi] Discovered ${routes.length} route(s):`);
   routes.forEach(r => {
     console.log(`  ${r.method.toUpperCase().padEnd(6)} ${r.path.padEnd(20)} (${r.framework}) -> ${r.file}`);
   });
 
   const spec = compileOpenAPISpec(routes);
   fs.writeFileSync(outFile, JSON.stringify(spec, null, 2), 'utf-8');
-  console.log(`[fastapify] Saved OpenAPI specification to ${outFile}`);
+  console.log(`[atozapi] Saved OpenAPI specification to ${outFile}`);
 
   if (command === 'generate') {
     process.exit(0);

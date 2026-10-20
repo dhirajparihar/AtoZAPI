@@ -1,10 +1,10 @@
 /**
- * Fastapify Express Example App
+ * AtoZAPI Express Example App
  * Demonstrates FastAPI-like automatic request validation and 422 responses in Express.
  */
 
 const http = require('http');
-const { fastapify } = require('../../sdk-js/express');
+const { atozapi } = require('../../sdk-js/express');
 
 // Helper to allow running with real Express if installed, or built-in zero-dependency mini-Express engine
 function createServerApp() {
@@ -110,7 +110,7 @@ app.use((req, res, next) => {
 // Root welcome route
 app.get('/', (req, res) => {
   res.json({
-    message: 'Welcome to Fastapify Express API',
+    message: 'Welcome to AtoZAPI Express API',
     endpoints: {
       createUser: 'POST /api/users'
     },
@@ -118,7 +118,7 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/api/users', fastapify(userRegistrationSchema), (req, res) => {
+app.post('/api/users', atozapi(userRegistrationSchema), (req, res) => {
   const { name, age } = req.validatedBody;
   res.status(201).json({
     id: Math.floor(Math.random() * 90000) + 10000,

@@ -1,51 +1,51 @@
 ---
 title: "Quickstart"
-description: "Install the Fastapify CLI and generate interactive Swagger UI documentation in under two minutes."
+description: "Install the AtoZAPI CLI and generate interactive Swagger UI documentation in under two minutes."
 ---
 
 # Quickstart Guide
 
-This guide walks you through installing the Fastapify CLI, scanning an existing codebase, and launching the interactive documentation server.
+This guide walks you through installing the AtoZAPI CLI, scanning an existing codebase, and launching the interactive documentation server.
 
 ---
 
 ## 1. Installation
 
-Install the Fastapify CLI globally via npm or run it directly using `npx`:
+Install the AtoZAPI CLI globally via npm or run it directly using `npx`:
 
 <CodeGroup>
 ```bash npm
-npm install -g @fastapify/cli
+npm install -g @atozapi/cli
 ```
 
 ```bash yarn
-yarn global add @fastapify/cli
+yarn global add @atozapi/cli
 ```
 
 ```bash pnpm
-pnpm add -g @fastapify/cli
+pnpm add -g @atozapi/cli
 ```
 
 ```bash npx
-npx @fastapify/cli serve
+npx @atozapi/cli serve
 ```
 </CodeGroup>
 
 Verify the installation:
 
 ```bash
-fastapify --help
+atozapi --help
 ```
 
 ---
 
 ## 2. Register an Endpoint with Validation
 
-Add a Fastapify schema to your route handler. Here is a Node.js Express example:
+Add an AtoZAPI schema to your route handler. Here is a Node.js Express example:
 
 ```javascript server.js
 const express = require('express');
-const { fastapify } = require('@fastapify/express');
+const { atozapi } = require('@atozapi/express');
 
 const app = express();
 app.use(express.json());
@@ -56,8 +56,8 @@ const userSchema = {
   age: { type: 'number', required: true, min: 18, max: 120 }
 };
 
-// 2. Attach fastapify middleware
-app.post('/api/users', fastapify(userSchema), (req, res) => {
+// 2. Attach atozapi middleware
+app.post('/api/users', atozapi(userSchema), (req, res) => {
   const { name, age } = req.validatedBody;
   res.status(201).json({ id: 1, name, age });
 });
@@ -71,10 +71,10 @@ app.listen(3000, () => {
 
 ## 3. Launch the Documentation Server
 
-Run the `fastapify` command in your project root:
+Run the `atozapi` command in your project root:
 
 ```bash
-fastapify
+atozapi
 ```
 
 By default, the engine will:
@@ -84,14 +84,14 @@ By default, the engine will:
 
 Output:
 ```text
-[fastapify] Scanning /path/to/project
-[fastapify] Discovered 1 route(s):
+[atozapi] Scanning /path/to/project
+[atozapi] Discovered 1 route(s):
   POST   /api/users           (express) -> server.js
-[fastapify] Saved OpenAPI specification to openapi.json
-[fastapify] Server running on http://localhost:8000
-[fastapify] Docs:     http://localhost:8000/docs
-[fastapify] ReDoc:    http://localhost:8000/redoc
-[fastapify] Spec:     http://localhost:8000/openapi.json
+[atozapi] Saved OpenAPI specification to openapi.json
+[atozapi] Server running on http://localhost:8000
+[atozapi] Docs:     http://localhost:8000/docs
+[atozapi] ReDoc:    http://localhost:8000/redoc
+[atozapi] Spec:     http://localhost:8000/openapi.json
 ```
 
 ---
@@ -111,7 +111,19 @@ Open your browser to [http://localhost:8000/docs](http://localhost:8000/docs):
 To generate the `openapi.json` contract file without running the HTTP server (e.g. for CI pipelines or static hosting), run:
 
 ```bash
-fastapify generate
+atozapi generate
 ```
 
 This writes the validated spec to `./openapi.json` and exits with status code `0`.
+
+---
+
+## 6. Integrating Into an Existing Project (Incremental Adoption)
+
+Adopting AtoZAPI does not require refactoring your existing application:
+
+1. **Keep Existing Routes Untouched**: AtoZAPI middleware operates per-route. You can adopt it for one new or updated endpoint without affecting existing unannotated routes.
+2. **Replace Manual Body Checks**: Swap out repetitive `if (!req.body.name)` validation checks or Joi/Celebrate middleware with `atozapi(schema)`.
+3. **Consume Sanitized Data**: Read validated inputs directly from `req.validatedBody` (Express/Next.js), `ginatozapi.Body[T](c)` (Go), or `$request->attributes->get('validatedBody')` (Laravel).
+4. **Standardized HTTP 422 Errors**: Be aware that invalid payloads now automatically return standard HTTP 422 responses formatted identically to FastAPI's `{ "detail": [...] }`.
+5. **Launch Scanner**: Run `npx @atozapi/cli` in your project root at any time. It will discover all AtoZAPI-guarded endpoints alongside your existing code.

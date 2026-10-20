@@ -15,7 +15,7 @@ Consistent request validation and automated OpenAPI documentation for your favor
 
 <HeroActions>
   <Button text="Get Started" href="/quickstart" type="primary" />
-  <Button text="View on GitHub" href="https://github.com/dhirajparihar/FastAPIfy" type="secondary" external="true" />
+  <Button text="View on GitHub" href="https://github.com/dhirajparihar/AtoZAPI" type="secondary" external="true" />
 </HeroActions>
 
 ---
@@ -26,8 +26,8 @@ Consistent request validation and automated OpenAPI documentation for your favor
   <FrameworkCard
     title="Express"
     subtitle="Node.js middleware"
-    badge="@fastapify/express"
-    badgeUrl="https://www.npmjs.com/package/@fastapify/express"
+    badge="@atozapi/express"
+    badgeUrl="https://www.npmjs.com/package/@atozapi/express"
     description="Declarative schema validation middleware attaching sanitized objects to req.validatedBody with instant HTTP 422 errors."
     href="/sdk/express"
     tag="Node.js"
@@ -35,8 +35,8 @@ Consistent request validation and automated OpenAPI documentation for your favor
   <FrameworkCard
     title="Next.js"
     subtitle="App Router integration"
-    badge="@fastapify/nextjs"
-    badgeUrl="https://www.npmjs.com/package/@fastapify/nextjs"
+    badge="@atozapi/nextjs"
+    badgeUrl="https://www.npmjs.com/package/@atozapi/nextjs"
     description="Higher-order route handler wrapping Request streams with JSON validation and typed response inference."
     href="/sdk/nextjs"
     tag="React / Next"
@@ -45,7 +45,7 @@ Consistent request validation and automated OpenAPI documentation for your favor
     title="Go · Gin"
     subtitle="Typed request validation"
     badge="pkg.go.dev"
-    badgeUrl="https://pkg.go.dev/github.com/dhirajparihar/FastAPIfy/sdk-go/gin"
+    badgeUrl="https://pkg.go.dev/github.com/dhirajparihar/AtoZAPI/sdk-go/gin"
     description="Reflection-driven Guard middleware validating Go struct binding tags with type-safe Body[T](c) retrieval."
     href="/sdk/gin"
     tag="Go 1.20+"
@@ -53,8 +53,8 @@ Consistent request validation and automated OpenAPI documentation for your favor
   <FrameworkCard
     title="Laravel"
     subtitle="PHP 8 integration"
-    badge="fastapify/laravel"
-    badgeUrl="https://packagist.org/packages/fastapify/laravel"
+    badge="atozapi/laravel"
+    badgeUrl="https://packagist.org/packages/atozapi/laravel"
     description="Native PHP 8 #[Post] routing attributes and reflection middleware formatting errors into FastAPI's { detail: [...] } standard."
     href="/sdk/laravel"
     tag="PHP 8.2+"
@@ -63,13 +63,13 @@ Consistent request validation and automated OpenAPI documentation for your favor
 
 ---
 
-## Why FastAPIfy?
+## Why AtoZAPI?
 
 FastAPI revolutionized the Python backend ecosystem with two core ergonomics: **declarative runtime validation** and **instant interactive documentation at `/docs`**. 
 
 Until now, teams using Node.js, Next.js, Go, or PHP had to choose between writing verbose JSDoc/Swagger YAML by hand, maintaining desynchronized specs, or stitching together incompatible libraries.
 
-FastAPIfy bridges that gap:
+AtoZAPI bridges that gap:
 
 <CardGrid cols={2}>
   <FeatureCard title="Zero Manual Swagger Writing" icon="code">
@@ -90,7 +90,7 @@ FastAPIfy bridges that gap:
 
 ## Standardized HTTP 422 Error Contract
 
-Whenever a request fails schema validation, FastAPIfy intercepts the request before reaching your business logic and returns an HTTP 422 Unprocessable Entity response:
+Whenever a request fails schema validation, AtoZAPI intercepts the request before reaching your business logic and returns an HTTP 422 Unprocessable Entity response:
 
 ```json
 {
@@ -116,8 +116,8 @@ Whenever a request fails schema validation, FastAPIfy intercepts the request bef
 
 | Framework | Package | Language Paradigm | Validation Hook |
 | :--- | :--- | :--- | :--- |
-| **Node.js (Express)** | `@fastapify/express` | Express Middleware | `app.post('/api', fastapify(schema), handler)` |
-| **Next.js App Router** | `@fastapify/nextjs` | Higher-Order Handler | `export const POST = nextFastapify({ schema, handler })` |
-| **Go (Gin)** | `github.com/dhirajparihar/FastAPIfy/sdk-go/gin` | Gin Middleware + Generics | `r.POST('/api', ginfastapify.Guard(Req{}), handler)` |
-| **PHP (Laravel)** | `fastapify/laravel` | PHP 8 Attributes + Reflection | `#[Post('/api', rules: [...])]` |
+| **Node.js (Express)** | `@atozapi/express` | Express Middleware | `app.post('/api', atozapi(schema), handler)` |
+| **Next.js App Router** | `@atozapi/nextjs` | Higher-Order Handler | `export const POST = nextAtozapi({ schema, handler })` |
+| **Go (Gin)** | `github.com/dhirajparihar/AtoZAPI/sdk-go/gin` | Gin Middleware + Generics | `r.POST('/api', ginatozapi.Guard(Req{}), handler)` |
+| **PHP (Laravel)** | `atozapi/laravel` | PHP 8 Attributes + Reflection | `#[Post('/api', rules: [...])]` |
 

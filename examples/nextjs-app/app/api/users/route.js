@@ -1,4 +1,4 @@
-const { nextFastapify } = require('../../../../../sdk-js/nextjs');
+const { nextAtozapi } = require('../../../../../sdk-js/nextjs');
 
 const userSchema = {
   name: {
@@ -14,7 +14,7 @@ const userSchema = {
   }
 };
 
-const POST = nextFastapify({
+const POST = nextAtozapi({
   schema: userSchema,
   handler: async (req, { validatedBody }) => {
     return Response.json({

@@ -3,9 +3,9 @@ title: "Go (Gin) SDK"
 description: "Thread-safe struct reflection and validation Guard middleware for Gin web applications."
 ---
 
-# Go (Gin) SDK (`github.com/dhirajparihar/FastAPIfy/sdk-go/gin`)
+# Go (Gin) SDK (`github.com/dhirajparihar/AtoZAPI/sdk-go/gin`)
 
-The `ginfastapify` package provides reflection-driven middleware for the Gin web framework. It intercepts incoming JSON requests, validates them against native Go struct binding tags, returns standardized FastAPI HTTP 422 error payloads, and attaches verified data to the Gin request context.
+The `ginatozapi` package provides reflection-driven middleware for the Gin web framework. It intercepts incoming JSON requests, validates them against native Go struct binding tags, returns standardized FastAPI HTTP 422 error payloads, and attaches verified data to the Gin request context.
 
 ---
 
@@ -14,7 +14,7 @@ The `ginfastapify` package provides reflection-driven middleware for the Gin web
 Add the module to your Go project:
 
 ```bash
-go get github.com/dhirajparihar/FastAPIfy/sdk-go/gin
+go get github.com/dhirajparihar/AtoZAPI/sdk-go/gin
 ```
 
 Ensure your `go.mod` specifies Go 1.20+:
@@ -25,7 +25,7 @@ module my-api
 go 1.22
 
 require (
-    github.com/dhirajparihar/FastAPIfy/sdk-go/gin v1.0.0
+    github.com/dhirajparihar/AtoZAPI/sdk-go/gin v1.0.0
     github.com/gin-gonic/gin v1.9.1
 )
 ```
@@ -34,7 +34,7 @@ require (
 
 ## Complete Operational Example
 
-Define your data structure using standard `json` and `binding` struct tags. Pass the schema struct directly to `ginfastapify.Guard()`:
+Define your data structure using standard `json` and `binding` struct tags. Pass the schema struct directly to `ginatozapi.Guard()`:
 
 ```go main.go
 package main
@@ -44,7 +44,7 @@ import (
 	"net/http"
 	"time"
 
-	ginfastapify "github.com/dhirajparihar/FastAPIfy/sdk-go/gin"
+	ginatozapi "github.com/dhirajparihar/AtoZAPI/sdk-go/gin"
 	"github.com/gin-gonic/gin"
 )
 
@@ -59,10 +59,10 @@ type CreateUserRequest struct {
 func main() {
 	r := gin.Default()
 
-	// Protect route with ginfastapify.Guard
-	r.POST("/api/users", ginfastapify.Guard(CreateUserRequest{}), func(c *gin.Context) {
+	// Protect route with ginatozapi.Guard
+	r.POST("/api/users", ginatozapi.Guard(CreateUserRequest{}), func(c *gin.Context) {
 		// Type-safe retrieval using generic helper
-		user, ok := ginfastapify.Body[CreateUserRequest](c)
+		user, ok := ginatozapi.Body[CreateUserRequest](c)
 		if !ok {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve validated body"})
 			return
@@ -88,7 +88,7 @@ func main() {
 
 ## Automatic HTTP 422 Error Handling
 
-`ginfastapify.Guard` formats validation failures from `go-playground/validator/v10` into FastAPI's standardized error layout. Struct field names are automatically resolved to their corresponding `json` tag keys:
+`ginatozapi.Guard` formats validation failures from `go-playground/validator/v10` into FastAPI's standardized error layout. Struct field names are automatically resolved to their corresponding `json` tag keys:
 
 ### Request Example (Invalid Payload)
 
@@ -136,13 +136,35 @@ Retrieve validated request payloads in your route handler using either the gener
 
 ```go
 // 1. Generic type-safe retrieval (recommended)
-user, ok := ginfastapify.Body[CreateUserRequest](c)
+user, ok := ginatozapi.Body[CreateUserRequest](c)
 
 // 2. Standard interface retrieval
-rawUser, exists := ginfastapify.GetValidatedBody(c)
+rawUser, exists := ginatozapi.GetValidatedBody(c)
 user := rawUser.(*CreateUserRequest)
 
 // 3. Direct Gin context lookup
 raw := c.MustGet("validatedBody")
 user := raw.(*CreateUserRequest)
 ```
+
+---
+
+## Multiple HTTP Methods (`PUT`, `PATCH`, `DELETE`)
+
+You can guard any Gin route handling mutation requests:
+
+```go
+// Update user
+r.PUT("/api/users/:id", ginatozapi.Guard(UpdateUserRequest{}), func(c *gin.Context) {
+    id := c.Param("id")
+    updates, _ := ginatozapi.Body[UpdateUserRequest](c)
+    c.JSON(http.StatusOK, gin.H{"id": id, "updated": updates})
+})
+
+// Delete user
+r.DELETE("/api/users/:id", func(c *gin.Context) {
+    c.Status(http.StatusNoContent)
+})
+```
+
+For more details on struct tags and constraint mappings, visit the [Schema Reference](/schema-reference).

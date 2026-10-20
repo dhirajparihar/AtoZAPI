@@ -1,4 +1,4 @@
-name: Fastapify Polyglot CI
+name: AtoZAPI Polyglot CI
 
 # Trigger workflow on every push or pull request targeting main or master branches
 on:

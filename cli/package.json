@@ -1,10 +1,10 @@
 {
-  "name": "@fastapify/cli",
+  "name": "@atozapi/cli",
   "version": "0.1.0",
-  "description": "Fastapify CLI - Automatic OpenAPI generation and Swagger UI server for polyglot backends",
+  "description": "AtoZAPI CLI - Automatic OpenAPI generation and Swagger UI server for polyglot backends",
   "main": "index.js",
   "bin": {
-    "fastapify": "./index.js"
+    "atozapi": "./index.js"
   },
   "type": "commonjs",
   "scripts": {
@@ -22,12 +22,13 @@
     "outputPath": "dist"
   },
   "keywords": [
+    "atozapi",
     "fastapi",
     "openapi",
     "swagger",
     "cli",
     "documentation"
   ],
-  "author": "Fastapify Maintainers",
+  "author": "AtoZAPI Maintainers",
   "license": "MIT"
 }

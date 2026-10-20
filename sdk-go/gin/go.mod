@@ -1,4 +1,4 @@
-module github.com/dhirajparihar/FastAPIfy/sdk-go/gin
+module github.com/dhirajparihar/AtoZAPI/sdk-go/gin
 
 go 1.20
 

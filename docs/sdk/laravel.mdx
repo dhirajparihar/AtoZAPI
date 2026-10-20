@@ -3,9 +3,9 @@ title: "PHP (Laravel) SDK"
 description: "PHP 8+ native attribute routing and reflection-driven validation middleware for Laravel."
 ---
 
-# PHP (Laravel) SDK (`fastapify/laravel`)
+# PHP (Laravel) SDK (`atozapi/laravel`)
 
-The `fastapify/laravel` package allows Laravel developers to use PHP 8 native attributes to declare endpoint paths, summaries, and validation rules directly on controller methods.
+The `atozapi/laravel` package allows Laravel developers to use PHP 8 native attributes to declare endpoint paths, summaries, and validation rules directly on controller methods.
 
 ---
 
@@ -14,10 +14,10 @@ The `fastapify/laravel` package allows Laravel developers to use PHP 8 native at
 Install via Composer:
 
 ```bash
-composer require fastapify/laravel
+composer require atozapi/laravel
 ```
 
-The package registers the `FastapifyServiceProvider` automatically via package discovery.
+The package registers the `AtozapiServiceProvider` automatically via package discovery.
 
 ---
 
@@ -30,7 +30,7 @@ Tag controller methods with the `#[Post]` attribute:
 
 namespace App\Http\Controllers;
 
-use Fastapify\Laravel\Attributes\Post;
+use Atozapi\Laravel\Attributes\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -62,7 +62,13 @@ class UserController
 
 ## How It Works
 
-1. **Reflection**: `FastapifyMiddleware` uses `ReflectionMethod` to discover `#[Post]` attributes on the target controller action.
+1. **Reflection**: `AtozapiMiddleware` uses `ReflectionMethod` to discover `#[Post]` attributes on the target controller action.
 2. **Validation**: It evaluates incoming `$request->all()` data using Laravel's native `Validator`.
 3. **HTTP 422 Interception**: Failed validations are formatted into the FastAPI `{ detail: [{ loc, msg, type }] }` format with status `422`.
 4. **Context Merging**: Valid properties are merged into `$request` and set on `$request->attributes->set('validatedBody', ...)`.
+
+---
+
+## Schema & Rule Reference
+
+To view all supported validation rules (`required`, `string`, `min`, `max`, `integer`, `email`, `array`), see the [Schema Reference](/schema-reference).

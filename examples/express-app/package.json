@@ -2,13 +2,13 @@
   "name": "example-express-app",
   "version": "0.1.0",
   "private": true,
-  "description": "Fastapify Express example application",
+  "description": "AtoZAPI Express example application",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "@fastapify/express": "*",
+    "@atozapi/express": "*",
     "express": "^4.19.2"
   }
 }

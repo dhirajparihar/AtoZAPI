@@ -2,14 +2,14 @@
   "name": "example-nextjs-app",
   "version": "0.1.0",
   "private": true,
-  "description": "Fastapify Next.js App Router example application",
+  "description": "AtoZAPI Next.js App Router example application",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
-    "@fastapify/nextjs": "*",
+    "@atozapi/nextjs": "*",
     "next": "^14.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

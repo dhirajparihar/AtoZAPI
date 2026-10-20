@@ -1,6 +1,6 @@
 {
-  "name": "fastapify/laravel",
-  "description": "FastAPI developer experience for Laravel - Automatic validation and OpenAPI generation",
+  "name": "atozapi/laravel",
+  "description": "AtoZAPI developer experience for Laravel - Automatic validation and OpenAPI generation",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -17,13 +17,13 @@
   },
   "autoload": {
     "psr-4": {
-      "Fastapify\\Laravel\\": "sdk-php/laravel/src/"
+      "Atozapi\\Laravel\\": "sdk-php/laravel/src/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Fastapify\\Laravel\\FastapifyServiceProvider"
+        "Atozapi\\Laravel\\AtozapiServiceProvider"
       ]
     }
   },

@@ -3,9 +3,9 @@ title: "Express SDK"
 description: "Production-grade validation middleware and OpenAPI schema collector for Express.js."
 ---
 
-# Express SDK (`@fastapify/express`)
+# Express SDK (`@atozapi/express`)
 
-The `@fastapify/express` package brings FastAPI's declarative request validation and automatic OpenAPI documentation reflection to Express applications.
+The `@atozapi/express` package brings FastAPI's declarative request validation and automatic OpenAPI documentation reflection to Express applications.
 
 ---
 
@@ -15,15 +15,15 @@ Install the middleware in your Node.js project:
 
 <CodeGroup>
 ```bash npm
-npm install @fastapify/express
+npm install @atozapi/express
 ```
 
 ```bash yarn
-yarn add @fastapify/express
+yarn add @atozapi/express
 ```
 
 ```bash pnpm
-pnpm add @fastapify/express
+pnpm add @atozapi/express
 ```
 </CodeGroup>
 
@@ -31,11 +31,11 @@ pnpm add @fastapify/express
 
 ## Complete Operational Example
 
-Here is a full Express application showing how to register schema rules, access validated parameters, and let Fastapify handle invalid inputs:
+Here is a full Express application showing how to register schema rules, access validated parameters, and let AtoZAPI handle invalid inputs:
 
 ```javascript server.js
 const express = require('express');
-const { fastapify } = require('@fastapify/express');
+const { atozapi } = require('@atozapi/express');
 
 const app = express();
 
@@ -71,8 +71,8 @@ const createUserSchema = {
   }
 };
 
-// Mount the fastapify middleware directly onto the route definition
-app.post('/api/users', fastapify(createUserSchema), (req, res) => {
+// Mount the atozapi middleware directly onto the route definition
+app.post('/api/users', atozapi(createUserSchema), (req, res) => {
   // Access sanitized, typed data directly on req.validatedBody
   const { name, email, age, tags } = req.validatedBody;
 
@@ -96,7 +96,7 @@ app.listen(PORT, () => {
 
 ## Automatic HTTP 422 Error Handling
 
-When incoming request data violates the schema, `fastapify` immediately halts execution and returns an HTTP 422 Unprocessable Entity response formatted according to the FastAPI/Pydantic standard:
+When incoming request data violates the schema, `atozapi` immediately halts execution and returns an HTTP 422 Unprocessable Entity response formatted according to the FastAPI/Pydantic standard:
 
 ### Request Example (Invalid Payload)
 
@@ -151,3 +151,25 @@ curl -X POST http://localhost:3000/api/users \
 | `min` | `number`, `integer` | Minimum numeric value | `{ min: 0 }` |
 | `max` | `number`, `integer` | Maximum numeric value | `{ max: 100 }` |
 | `items` | `array` | Schema rule for array elements | `{ items: { type: 'string' } }` |
+
+---
+
+## Multiple HTTP Methods (`PUT`, `PATCH`, `DELETE`)
+
+AtoZAPI can be used on any HTTP mutation route:
+
+```javascript
+// PUT update endpoint
+app.put('/api/users/:id', atozapi(updateUserSchema), (req, res) => {
+  const { id } = req.params;
+  const updates = req.validatedBody;
+  res.json({ id, ...updates, updated: true });
+});
+
+// DELETE endpoint
+app.delete('/api/users/:id', (req, res) => {
+  res.status(204).send();
+});
+```
+
+For advanced validation features such as nested objects, optional fields, and default values, see the [Schema Reference](/schema-reference).

@@ -1,5 +1,5 @@
 /**
- * @fastapify/express
+ * @atozapi/express
  * FastAPI-style request validation middleware and metadata collector for Express.js.
  */
 
@@ -223,12 +223,12 @@ function validateSchema(schema, payload, rootLoc = 'body') {
 }
 
 /**
- * Express middleware generator for fastapify schema validation.
+ * Express middleware generator for AtoZAPI schema validation.
  * @param {object} schema - Validation schema or JSON rule payload
  * @returns {Function} Express middleware (req, res, next)
  */
-function fastapify(schema = {}) {
-  const middleware = function fastapifyMiddleware(req, res, next) {
+function atozapi(schema = {}) {
+  const middleware = function atozapiMiddleware(req, res, next) {
     const rawBody = req.body || {};
     const validationResult = validateSchema(schema, rawBody, 'body');
 
@@ -245,14 +245,14 @@ function fastapify(schema = {}) {
   };
 
   // Expose schema metadata for automated CLI scanner reflection
-  middleware.__fastapify = true;
+  middleware.__atozapi = true;
   middleware._schema = schema;
 
   return middleware;
 }
 
 module.exports = {
-  fastapify,
+  atozapi,
   validateSchema,
   validateField
 };

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Fastapify\Laravel\Attributes\Post;
+use Atozapi\Laravel\Attributes\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

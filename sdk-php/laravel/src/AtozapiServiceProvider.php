@@ -1,25 +1,25 @@
 <?php
 
-namespace Fastapify\Laravel;
+namespace Atozapi\Laravel;
 
-use Fastapify\Laravel\Middleware\FastapifyMiddleware;
+use Atozapi\Laravel\Middleware\AtozapiMiddleware;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * FastapifyServiceProvider
- * Automatically registers the fastapify middleware in Laravel applications.
+ * AtozapiServiceProvider
+ * Automatically registers the atozapi middleware in Laravel applications.
  */
-class FastapifyServiceProvider extends ServiceProvider
+class AtozapiServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap fastapify package services.
+     * Bootstrap atozapi package services.
      */
     public function boot(): void
     {
         /** @var Router $router */
         $router = $this->app->make(Router::class);
-        $router->aliasMiddleware('fastapify', FastapifyMiddleware::class);
+        $router->aliasMiddleware('atozapi', AtozapiMiddleware::class);
     }
 
     /**

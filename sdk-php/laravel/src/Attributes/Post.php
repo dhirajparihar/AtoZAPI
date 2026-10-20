@@ -1,11 +1,11 @@
 <?php
 
-namespace Fastapify\Laravel\Attributes;
+namespace Atozapi\Laravel\Attributes;
 
 use Attribute;
 
 /**
- * Native PHP 8 Attribute marking a controller method as a Fastapify POST route.
+ * Native PHP 8 Attribute marking a controller method as an AtoZAPI POST route.
  * Provides metadata for automatic request validation and OpenAPI documentation.
  */
 #[Attribute(Attribute::TARGET_METHOD)]

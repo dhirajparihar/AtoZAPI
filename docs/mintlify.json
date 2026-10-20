@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Fastapify",
+  "name": "AtoZAPI",
   "theme": "prism",
   "colors": {
     "primary": "#009688",
@@ -10,7 +10,7 @@
   "topbarLinks": [
     {
       "name": "GitHub",
-      "url": "https://github.com/dhirajparihar/FastAPIfy"
+      "url": "https://github.com/dhirajparihar/AtoZAPI"
     }
   ],
   "topbarCtaButton": {
@@ -36,7 +36,8 @@
       "group": "Getting Started",
       "pages": [
         "introduction",
-        "quickstart"
+        "quickstart",
+        "schema-reference"
       ]
     },
     {
@@ -56,6 +57,6 @@
     }
   ],
   "footerSocials": {
-    "github": "https://github.com/dhirajparihar/FastAPIfy"
+    "github": "https://github.com/dhirajparihar/AtoZAPI"
   }
 }

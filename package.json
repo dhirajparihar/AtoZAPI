@@ -1,5 +1,5 @@
 {
-  "name": "fastapify-monorepo",
+  "name": "atozapi-monorepo",
   "version": "0.1.0",
   "private": true,
   "description": "FastAPI developer experience for Node.js, Next.js, and polyglot backends",
@@ -20,6 +20,7 @@
     "test:parity": "node ./scripts/parity-test.js"
   },
   "keywords": [
+    "atozapi",
     "fastapi",
     "openapi",
     "swagger",
@@ -27,6 +28,6 @@
     "express",
     "nextjs"
   ],
-  "author": "Fastapify Maintainers",
+  "author": "AtoZAPI Maintainers",
   "license": "MIT"
 }

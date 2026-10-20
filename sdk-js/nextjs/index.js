@@ -1,5 +1,5 @@
 /**
- * @fastapify/nextjs
+ * @atozapi/nextjs
  * FastAPI-style request validation and OpenAPI metadata wrapper for Next.js App Router route handlers.
  */
 
@@ -236,14 +236,16 @@ function createJsonResponse(data, status = 200) {
 /**
  * Next.js App Router higher-order route handler wrapper.
  * Supports both call styles:
- *   nextFastapify({ schema, handler })
- *   nextFastapify(schema, handler)
+ *   nextAtozapi({ schema, handler })
+ *   nextAtozapi({ schema: userSchema, handler: async (req, { validatedBody }) => { ... } })
+ * Or shorthand:
+ *   nextAtozapi(schema, handler)
  *
  * @param {object|Function} optionsOrSchema
  * @param {Function} [maybeHandler]
  * @returns {Function} Next.js route handler (req, context) => Promise<Response>
  */
-function nextFastapify(optionsOrSchema, maybeHandler) {
+function nextAtozapi(optionsOrSchema, maybeHandler) {
   let schema = {};
   let handler = null;
 
@@ -259,10 +261,10 @@ function nextFastapify(optionsOrSchema, maybeHandler) {
   }
 
   if (typeof handler !== 'function') {
-    throw new Error('[fastapify] Next.js route handler must be a function.');
+    throw new Error('[atozapi] Next.js route handler must be a function.');
   }
 
-  const wrappedRoute = async function fastapifyNextRoute(req, context = {}) {
+  const wrappedRoute = async function atozapiNextRoute(req, context = {}) {
     let rawBody = {};
 
     // In Web Request stream (Next.js App Router)
@@ -301,14 +303,14 @@ function nextFastapify(optionsOrSchema, maybeHandler) {
   };
 
   // Expose schema metadata for automated CLI scanner reflection
-  wrappedRoute.__fastapify = true;
+  wrappedRoute.__atozapi = true;
   wrappedRoute._schema = schema;
 
   return wrappedRoute;
 }
 
 module.exports = {
-  nextFastapify,
+  nextAtozapi,
   validateSchema,
   validateField
 };

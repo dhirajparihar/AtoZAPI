@@ -1,4 +1,4 @@
-package ginfastapify
+package ginatozapi
 
 import (
 	"encoding/json"
@@ -163,7 +163,7 @@ func Guard(schema interface{}) gin.HandlerFunc {
 	} else if schemaVal.Kind() == reflect.Struct {
 		targetType = schemaVal.Type()
 	} else {
-		panic(fmt.Sprintf("ginfastapify: Guard expected a struct or struct pointer, received %T", schema))
+		panic(fmt.Sprintf("atozapi: Guard expected a struct or struct pointer, received %T", schema))
 	}
 
 	return func(c *gin.Context) {

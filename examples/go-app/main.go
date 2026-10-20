@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	ginfastapify "github.com/dhirajparihar/FastAPIfy/sdk-go/gin"
+	ginatozapi "github.com/dhirajparihar/AtoZAPI/sdk-go/gin"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,7 +23,7 @@ func main() {
 	// Root health check & info route
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "Welcome to Fastapify Go (Gin) API",
+			"message": "Welcome to AtoZAPI Go (Gin) API",
 			"endpoints": gin.H{
 				"createUser": "POST /api/users",
 			},
@@ -31,11 +31,11 @@ func main() {
 		})
 	})
 
-	// POST /api/users protected by ginfastapify.Guard middleware
-	r.POST("/api/users", ginfastapify.Guard(User{}), func(c *gin.Context) {
-		user, ok := ginfastapify.Body[User](c)
+	// POST /api/users protected by ginatozapi.Guard middleware
+	r.POST("/api/users", ginatozapi.Guard(User{}), func(c *gin.Context) {
+		user, ok := ginatozapi.Body[User](c)
 		if !ok {
-			raw, _ := ginfastapify.GetValidatedBody(c)
+			raw, _ := ginatozapi.GetValidatedBody(c)
 			user = raw.(*User)
 		}
 

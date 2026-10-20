@@ -1,11 +1,11 @@
 /**
- * Fastapify JavaScript/TypeScript Test Runner
+ * AtoZAPI JavaScript/TypeScript Test Runner
  * Validates Express SDK, Next.js SDK, and CLI OpenAPI generator.
  */
 
 const assert = require('assert');
-const { fastapify } = require('../sdk-js/express');
-const { nextFastapify } = require('../sdk-js/nextjs');
+const { atozapi } = require('../sdk-js/express');
+const { nextAtozapi } = require('../sdk-js/nextjs');
 const { scanCodebaseForRoutes, compileOpenAPISpec } = require('../cli');
 
 async function runTests() {
@@ -16,7 +16,7 @@ async function runTests() {
     name: { type: 'string', required: true, minLength: 2 },
     age: { type: 'number', required: true, min: 18 }
   };
-  const expressMiddleware = fastapify(expressSchema);
+  const expressMiddleware = atozapi(expressSchema);
 
   let statusCaptured = null;
   let jsonCaptured = null;
@@ -46,7 +46,7 @@ async function runTests() {
   console.log('PASS: Express validates payload and attaches validatedBody');
 
   // Next.js SDK
-  const nextRoute = nextFastapify({
+  const nextRoute = nextAtozapi({
     schema: expressSchema,
     handler: async (req, { validatedBody }) => {
       return new Response(JSON.stringify({ success: true, data: validatedBody }), {

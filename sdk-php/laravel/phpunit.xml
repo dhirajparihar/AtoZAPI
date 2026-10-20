@@ -5,7 +5,7 @@
          colors="true"
          cacheDirectory=".phpunit.cache">
     <testsuites>
-        <testsuite name="Fastapify Laravel Test Suite">
+        <testsuite name="AtoZAPI Laravel Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>

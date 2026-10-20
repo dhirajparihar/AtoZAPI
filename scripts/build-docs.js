@@ -14,7 +14,8 @@ const nav = [
     group: "Getting Started",
     items: [
       { id: "overview", title: "Overview", file: "introduction.mdx", href: "introduction.html" },
-      { id: "quickstart", title: "Quickstart", file: "quickstart.mdx", href: "quickstart.html" }
+      { id: "quickstart", title: "Quickstart", file: "quickstart.mdx", href: "quickstart.html" },
+      { id: "schema-reference", title: "Schema Reference", file: "schema-reference.mdx", href: "schema-reference.html" }
     ]
   },
   {
@@ -333,7 +334,7 @@ function renderFullPage({ title, description, contentHtml, toc, currentId, group
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(title)} | FastAPIfy Documentation</title>
+  <title>${escapeHtml(title)} | AtoZAPI Documentation</title>
   <meta name="description" content="${escapeHtml(description || 'Consistent request validation and automated OpenAPI documentation for your favorite backend frameworks.')}">
   
   <!-- Fonts: Inter & JetBrains Mono -->
@@ -775,8 +776,8 @@ function renderFullPage({ title, description, contentHtml, toc, currentId, group
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
       <a href="${basePath}introduction.html" class="brand-logo">
-        <div class="brand-icon">F</div>
-        <span>FastAPIfy</span>
+        <div class="brand-icon">A</div>
+        <span>AtoZAPI</span>
       </a>
       <span class="version-tag">v1.0.0</span>
     </div>
@@ -793,7 +794,7 @@ function renderFullPage({ title, description, contentHtml, toc, currentId, group
 
     <div class="topbar-right">
       <a href="${basePath}quickstart.html" class="top-nav-link">Quickstart</a>
-      <a href="https://github.com/dhirajparihar/FastAPIfy" target="_blank" rel="noopener" class="github-btn">
+      <a href="https://github.com/dhirajparihar/AtoZAPI" target="_blank" rel="noopener" class="github-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
         <span>GitHub</span>
       </a>
@@ -869,9 +870,9 @@ function renderFullPage({ title, description, contentHtml, toc, currentId, group
       const current = document.documentElement.getAttribute('data-theme');
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('fastapify-theme', next);
+      localStorage.setItem('atozapi-theme', next);
     }
-    const savedTheme = localStorage.getItem('fastapify-theme');
+    const savedTheme = localStorage.getItem('atozapi-theme');
     if (savedTheme) {
       document.documentElement.setAttribute('data-theme', savedTheme);
     }
@@ -960,6 +961,7 @@ const pages = [
   { file: 'introduction.mdx', id: 'overview', out: 'index.html', title: 'Overview', group: 'Getting Started', base: '' },
   { file: 'introduction.mdx', id: 'overview', out: 'introduction.html', title: 'Overview', group: 'Getting Started', base: '' },
   { file: 'quickstart.mdx', id: 'quickstart', out: 'quickstart.html', title: 'Quickstart', group: 'Getting Started', base: '' },
+  { file: 'schema-reference.mdx', id: 'schema-reference', out: 'schema-reference.html', title: 'Schema Reference', group: 'Getting Started', base: '' },
   { file: 'sdk/express.mdx', id: 'sdk-express', out: 'sdk/express.html', title: 'Express (Node.js)', group: 'Framework SDKs', base: '../' },
   { file: 'sdk/nextjs.mdx', id: 'sdk-nextjs', out: 'sdk/nextjs.html', title: 'Next.js App Router', group: 'Framework SDKs', base: '../' },
   { file: 'sdk/gin.mdx', id: 'sdk-gin', out: 'sdk/gin.html', title: 'Go (Gin)', group: 'Framework SDKs', base: '../' },

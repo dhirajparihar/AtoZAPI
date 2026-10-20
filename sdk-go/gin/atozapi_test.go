@@ -1,4 +1,4 @@
-package ginfastapify_test
+package ginatozapi_test
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	ginfastapify "github.com/dhirajparihar/FastAPIfy/sdk-go/gin"
+	ginatozapi "github.com/dhirajparihar/AtoZAPI/sdk-go/gin"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,8 +20,8 @@ func setupTestRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
 
-	r.POST("/api/test-users", ginfastapify.Guard(TestUser{}), func(c *gin.Context) {
-		user, ok := ginfastapify.Body[TestUser](c)
+	r.POST("/api/test-users", ginatozapi.Guard(TestUser{}), func(c *gin.Context) {
+		user, ok := ginatozapi.Body[TestUser](c)
 		if !ok {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve validated body"})
 			return
@@ -54,7 +54,7 @@ func TestGuardMiddleware_ValidationFailure(t *testing.T) {
 		t.Fatalf("Expected status 422 Unprocessable Entity, got %d", w.Code)
 	}
 
-	var errResp ginfastapify.HTTPValidationError
+	var errResp ginatozapi.HTTPValidationError
 	if err := json.Unmarshal(w.Body.Bytes(), &errResp); err != nil {
 		t.Fatalf("Failed to parse 422 response JSON: %v", err)
 	}

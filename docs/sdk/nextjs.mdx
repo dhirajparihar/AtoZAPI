@@ -3,9 +3,9 @@ title: "Next.js App Router SDK"
 description: "Higher-order route wrapper for Next.js 13+ and 14+ App Router route handlers."
 ---
 
-# Next.js SDK (`@fastapify/nextjs`)
+# Next.js SDK (`@atozapi/nextjs`)
 
-The `@fastapify/nextjs` package provides a higher-order wrapper function `nextFastapify` for Next.js App Router route handlers (`app/**/route.js` or `app/**/route.ts`).
+The `@atozapi/nextjs` package provides a higher-order wrapper function `nextAtozapi` for Next.js App Router route handlers (`app/**/route.js` or `app/**/route.ts`).
 
 ---
 
@@ -15,15 +15,15 @@ Install in your Next.js project:
 
 <CodeGroup>
 ```bash npm
-npm install @fastapify/nextjs
+npm install @atozapi/nextjs
 ```
 
 ```bash yarn
-yarn add @fastapify/nextjs
+yarn add @atozapi/nextjs
 ```
 
 ```bash pnpm
-pnpm add @fastapify/nextjs
+pnpm add @atozapi/nextjs
 ```
 </CodeGroup>
 
@@ -31,10 +31,10 @@ pnpm add @fastapify/nextjs
 
 ## Complete Operational Example
 
-In Next.js App Router, export HTTP method functions wrapped in `nextFastapify`:
+In Next.js App Router, export HTTP method functions wrapped in `nextAtozapi`:
 
 ```javascript app/api/users/route.js
-import { nextFastapify } from '@fastapify/nextjs';
+import { nextAtozapi } from '@atozapi/nextjs';
 
 const userSchema = {
   name: {
@@ -50,7 +50,7 @@ const userSchema = {
   }
 };
 
-export const POST = nextFastapify({
+export const POST = nextAtozapi({
   schema: userSchema,
   handler: async (req, { validatedBody }) => {
     // verified data is injected directly into context
@@ -68,4 +68,39 @@ export const POST = nextFastapify({
 
 ## Error Handling
 
-When validation fails, `nextFastapify` intercepts the request before reaching your handler and immediately returns a standard Web API `Response` object with status `422` and the standardized `{ detail: [...] }` payload.
+When validation fails, `nextAtozapi` intercepts the request before reaching your handler and immediately returns a standard Web API `Response` object with status `422` and the standardized `{ detail: [...] }` payload.
+
+---
+
+## Multiple HTTP Methods (`PUT`, `PATCH`, `DELETE`)
+
+You can export handlers for any HTTP mutation method inside `app/api/.../route.js`:
+
+```javascript
+// Export PUT endpoint
+export const PUT = nextAtozapi({
+  schema: updateUserSchema,
+  handler: async (req, { validatedBody }) => {
+    return Response.json({ success: true, updated: validatedBody });
+  }
+});
+
+// Export standard DELETE without body validation
+export async function DELETE(req) {
+  return new Response(null, { status: 204 });
+}
+```
+
+---
+
+## Alternative Shorthand Syntax
+
+In addition to the options object, `nextAtozapi` also supports direct argument passing:
+
+```javascript
+export const POST = nextAtozapi(userSchema, async (req, { validatedBody }) => {
+  return Response.json({ user: validatedBody }, { status: 201 });
+});
+```
+
+For advanced validation rules including nested objects and array constraints, see the [Schema Reference](/schema-reference).

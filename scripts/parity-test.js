@@ -1,12 +1,12 @@
 /**
- * Fastapify Cross-Framework Parity Test Suite
+ * AtoZAPI Cross-Framework Parity Test Suite
  * Validates that all framework SDKs output identical HTTP 422 error structures
  * conforming strictly to FastAPI / Pydantic specifications.
  */
 
 const assert = require('assert');
-const { fastapify, validateSchema } = require('../sdk-js/express');
-const { nextFastapify } = require('../sdk-js/nextjs');
+const { atozapi, validateSchema } = require('../sdk-js/express');
+const { nextAtozapi } = require('../sdk-js/nextjs');
 
 function assertFastAPIErrorStructure(detail, frameworkName) {
   assert.ok(Array.isArray(detail), `[${frameworkName}] Expected 'detail' to be an array`);
@@ -22,7 +22,7 @@ function assertFastAPIErrorStructure(detail, frameworkName) {
 }
 
 async function runParityTests() {
-  console.log('Running Fastapify cross-framework parity test suite...\n');
+  console.log('Running AtoZAPI cross-framework parity test suite...\n');
 
   const commonSchema = {
     name: { type: 'string', required: true, minLength: 2 },
@@ -34,7 +34,7 @@ async function runParityTests() {
 
   // 1. Test Express SDK Parity
   console.log('Checking Express SDK parity...');
-  const expressMiddleware = fastapify(commonSchema);
+  const expressMiddleware = atozapi(commonSchema);
   let expressStatus = null;
   let expressBody = null;
 
@@ -50,7 +50,7 @@ async function runParityTests() {
 
   // 2. Test Next.js App Router Parity
   console.log('Checking Next.js App Router SDK parity...');
-  const nextHandler = nextFastapify({
+  const nextHandler = nextAtozapi({
     schema: commonSchema,
     handler: async (req, { validatedBody }) => {
       return new Response(JSON.stringify({ success: true, data: validatedBody }), { status: 200 });

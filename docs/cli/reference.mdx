@@ -1,18 +1,18 @@
 ---
 title: "CLI Reference"
-description: "Command-line interface options and configuration for the Fastapify scanner engine."
+description: "Command-line interface options and configuration for the AtoZAPI scanner engine."
 ---
 
-# Fastapify CLI Reference
+# AtoZAPI CLI Reference
 
-The Fastapify CLI scans active codebases, extracts endpoint declarations and schema constraints, compiles `openapi.json` specifications, and serves the embedded Swagger UI and ReDoc interfaces.
+The AtoZAPI CLI scans active codebases, extracts endpoint declarations and schema constraints, compiles `openapi.json` specifications, and serves the embedded Swagger UI and ReDoc interfaces.
 
 ---
 
 ## Global Syntax
 
 ```bash
-fastapify [command] [options]
+atozapi [command] [options]
 ```
 
 If no command is provided, the CLI defaults to `serve`.
@@ -26,7 +26,7 @@ If no command is provided, the CLI defaults to `serve`.
 Scans the active directory, compiles `openapi.json`, and starts the localized documentation HTTP server.
 
 ```bash
-fastapify serve [options]
+atozapi serve [options]
 ```
 
 ### `generate`
@@ -34,7 +34,7 @@ fastapify serve [options]
 Scans the codebase, compiles `openapi.json` to disk, and exits without launching the HTTP server. Useful for CI/CD pipelines.
 
 ```bash
-fastapify generate [options]
+atozapi generate [options]
 ```
 
 ---
@@ -53,10 +53,59 @@ fastapify generate [options]
 
 ### Custom Port and Scan Directory
 ```bash
-fastapify serve --port 3001 --dir ./src
+atozapi serve --port 3001 --dir ./src
 ```
 
 ### Headless CI Specification Generation
 ```bash
-fastapify generate --out ./public/openapi.json
+atozapi generate --out ./public/openapi.json
 ```
+
+---
+
+## Standalone Native Binaries (Zero-Node)
+
+For Go and PHP/Laravel projects that do not have Node.js installed in their development or CI environment, precompiled single-file binaries are available from [GitHub Releases](https://github.com/dhirajparihar/AtoZAPI/releases):
+
+### Linux (x64)
+```bash
+curl -LO https://github.com/dhirajparihar/AtoZAPI/releases/latest/download/atozapi-linux-x64
+chmod +x atozapi-linux-x64
+./atozapi-linux-x64 serve --port 8000
+```
+
+### macOS (x64 / Apple Silicon via Rosetta)
+```bash
+curl -LO https://github.com/dhirajparihar/AtoZAPI/releases/latest/download/atozapi-macos-x64
+chmod +x atozapi-macos-x64
+./atozapi-macos-x64 serve --port 8000
+```
+
+### Windows (x64)
+```powershell
+# In PowerShell:
+Invoke-WebRequest -Uri "https://github.com/dhirajparihar/AtoZAPI/releases/latest/download/atozapi-win-x64.exe" -OutFile "atozapi.exe"
+.\atozapi.exe serve
+```
+
+---
+
+## Scanner Discovery Rules & Best Practices
+
+AtoZAPI scans your workspace statically using high-speed AST and pattern parsing. To ensure 100% accurate route discovery and OpenAPI contract compilation, follow these best practices:
+
+### 1. Framework Signatures
+The scanner detects endpoints matching these patterns:
+- **Express**: `app.(post|get|put|delete|patch)(path, atozapi(schema))` or `router.(post|get|put|delete|patch)(...)`
+- **Next.js App Router**: `export const (POST|GET|PUT|DELETE|PATCH) = nextAtozapi({ schema, handler })` in `app/**/route.(js|ts)`
+- **Go (Gin)**: `r.(POST|GET|PUT|DELETE|PATCH)(path, ginatozapi.Guard(Struct{}))`
+- **Laravel**: Controller action methods decorated with `#[Post(path: '...', rules: [...])]`
+
+### 2. Schema Declaration Proximity
+For JavaScript and TypeScript projects:
+- **Recommended**: Declare schema variables (`const mySchema = { ... }`) in the same file as the route, or inline directly within `atozapi({ ... })`.
+- This ensures the static scanner can resolve all field constraints and types without needing a running runtime or module bundler.
+
+### 3. Excluded Directories
+The scanner automatically skips build and dependency directories:
+`node_modules`, `.git`, `.next`, `dist`, `build`, `coverage`, `.turbo`, `tests`, `docs`.

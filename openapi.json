@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Fastapify API Docs",
+    "title": "AtoZAPI Docs",
     "version": "1.0.0",
-    "description": "Interactive API documentation generated automatically by Fastapify across polyglot backends."
+    "description": "Interactive API documentation generated automatically by AtoZAPI across polyglot backends."
   },
   "paths": {
     "/api/users": {
@@ -38,7 +38,7 @@
           }
         },
         "requestBody": {
-          "description": "JSON request payload validated by fastapify",
+          "description": "JSON request payload validated by AtoZAPI",
           "required": true,
           "content": {
             "application/json": {

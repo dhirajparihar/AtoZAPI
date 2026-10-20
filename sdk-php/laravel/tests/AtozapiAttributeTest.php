@@ -1,8 +1,8 @@
 <?php
 
-namespace Fastapify\Laravel\Tests;
+namespace Atozapi\Laravel\Tests;
 
-use Fastapify\Laravel\Attributes\Post;
+use Atozapi\Laravel\Attributes\Post;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
@@ -21,7 +21,7 @@ class DummyTestController
     public function untagged(): void {}
 }
 
-class FastapifyAttributeTest extends TestCase
+class AtozapiAttributeTest extends TestCase
 {
     public function testPostAttributeInstantiation(): void
     {
