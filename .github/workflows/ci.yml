@@ -32,7 +32,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Monorepo Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run JS/TS Test Suite & CLI Verification
         run: npm run test:all
@@ -53,11 +53,11 @@ jobs:
         with:
           go-version: '1.22'
           check-latest: false
-          cache: true
-          cache-dependency-path: sdk-go/gin/go.mod
 
-      - name: Download Go Module Dependencies
-        run: go mod download
+      - name: Tidy & Download Go Module Dependencies
+        run: |
+          go mod tidy
+          go mod download
 
       - name: Run Go Unit Tests
         run: go test -v ./...
