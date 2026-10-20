@@ -1,6 +1,6 @@
 {
   "name": "@atozapi/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "AtoZAPI CLI - Automatic OpenAPI generation and Swagger UI server for polyglot backends",
   "main": "index.js",
   "bin": {
