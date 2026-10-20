@@ -4,9 +4,26 @@
   "description": "AtoZAPI CLI - Automatic OpenAPI generation and Swagger UI server for polyglot backends",
   "main": "index.js",
   "bin": {
-    "atozapi": "./index.js"
+    "atozapi": "index.js"
   },
   "type": "commonjs",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhirajparihar/AtoZAPI.git",
+    "directory": "cli"
+  },
+  "homepage": "https://github.com/dhirajparihar/AtoZAPI#readme",
+  "bugs": {
+    "url": "https://github.com/dhirajparihar/AtoZAPI/issues"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "start": "node index.js serve",
     "generate": "node index.js generate",

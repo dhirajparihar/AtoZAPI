@@ -4,6 +4,23 @@
   "description": "FastAPI-style request validation and OpenAPI metadata wrapper for Next.js App Router",
   "main": "index.js",
   "type": "commonjs",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhirajparihar/AtoZAPI.git",
+    "directory": "sdk-js/nextjs"
+  },
+  "homepage": "https://github.com/dhirajparihar/AtoZAPI#readme",
+  "bugs": {
+    "url": "https://github.com/dhirajparihar/AtoZAPI/issues"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "node index.js"
   },
