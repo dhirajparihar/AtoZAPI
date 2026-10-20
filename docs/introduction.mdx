@@ -1,79 +1,123 @@
 ---
-title: "Introduction"
-description: "FastAPI's magical auto-documentation and runtime validation, brought to every backend framework."
+title: "Overview"
+description: "Consistent request validation and automated OpenAPI documentation for Express, Next.js, Go (Gin), and Laravel."
 ---
 
-# Fastapify Overview
+# Build APIs. Skip the boilerplate.
 
-FastAPI revolutionized the Python backend ecosystem with two defining features: **declarative runtime request validation** and **instant interactive OpenAPI/Swagger UI documentation at `/docs`**.
+Consistent request validation and automated OpenAPI documentation for your favorite backend frameworks.
 
-Until now, developers using Node.js (Express), Next.js, Go (Gin), or PHP (Laravel) were forced to either write hundreds of lines of fragile boilerplate JSDoc/Swagger comments, maintain desynchronized manual YAML specs, or bolt together incompatible third-party libraries.
+<HeroBadges>
+  <Badge text="v1.0.0" type="primary" />
+  <Badge text="Open Source (MIT)" type="neutral" />
+  <Badge text="Zero-Config /docs" type="success" />
+</HeroBadges>
 
-**Fastapify eliminates that friction.** It delivers FastAPI's DX across every major backend environment without vendor lock-in or heavyweight runtime overhead.
-
-<Note>
-**The Fastapify Guarantee**: Write standard endpoint logic with native language types or schema definitions. Fastapify handles runtime validation, throws standard HTTP 422 errors on invalid input, and automatically compiles production-ready OpenAPI 3.0 documentation.
-</Note>
-
----
-
-## Why Fastapify?
-
-<CardGroup cols={2}>
-  <Card title="Zero Manual Swagger Writing" icon="file-code">
-    Stop writing thousands of lines of verbose OpenAPI YAML or out-of-sync JSDoc annotations. Your code is the single source of truth.
-  </Card>
-  <Card title="Unified HTTP 422 Standard" icon="shield-check">
-    Standardized Pydantic-style validation error arrays (`{ detail: [{ loc, msg, type }] }`) across all microservices and languages.
-  </Card>
-  <Card title="Instant Interactive /docs" icon="browser">
-    Zero-config local documentation server hosting embedded Swagger UI and ReDoc out of the box.
-  </Card>
-  <Card title="Polyglot Native Syntax" icon="cube">
-    Native idiomatic idioms for each stack: middlewares in Express, Higher-Order Functions in Next.js, struct tags in Gin, and PHP 8 attributes in Laravel.
-  </Card>
-</CardGroup>
+<HeroActions>
+  <Button text="Get Started" href="/quickstart" type="primary" />
+  <Button text="View on GitHub" href="https://github.com/dhirajparihar/FastAPIfy" type="secondary" external="true" />
+</HeroActions>
 
 ---
 
-## Ecosystem Matrix
+## ONE WORKFLOW · MULTIPLE BACKEND ECOSYSTEMS
 
-Fastapify provides first-class support for the following backend ecosystems:
-
-| Framework | SDK Package | Validation Engine | Documentation Hook |
-| :--- | :--- | :--- | :--- |
-| **Node.js (Express)** | `@fastapify/express` | Lightweight Schema Engine | `fastapify(schema)` middleware |
-| **Next.js App Router** | `@fastapify/nextjs` | Web Stream Evaluator | `nextFastapify({ schema, handler })` |
-| **Go (Gin)** | `github.com/dhirajparihar/FastAPIfy/sdk-go/gin` | Struct Reflection & Validator v10 | `ginfastapify.Guard(Struct{})` |
-| **PHP (Laravel)** | `fastapify/laravel` | Native PHP 8 Reflection & Validator | `#[Post(path, rules: [...])]` |
+<FrameworkGrid>
+  <FrameworkCard
+    title="Express"
+    subtitle="Node.js middleware"
+    badge="@fastapify/express"
+    badgeUrl="https://www.npmjs.com/package/@fastapify/express"
+    description="Declarative schema validation middleware attaching sanitized objects to req.validatedBody with instant HTTP 422 errors."
+    href="/sdk/express"
+    tag="Node.js"
+  />
+  <FrameworkCard
+    title="Next.js"
+    subtitle="App Router integration"
+    badge="@fastapify/nextjs"
+    badgeUrl="https://www.npmjs.com/package/@fastapify/nextjs"
+    description="Higher-order route handler wrapping Request streams with JSON validation and typed response inference."
+    href="/sdk/nextjs"
+    tag="React / Next"
+  />
+  <FrameworkCard
+    title="Go · Gin"
+    subtitle="Typed request validation"
+    badge="pkg.go.dev"
+    badgeUrl="https://pkg.go.dev/github.com/dhirajparihar/FastAPIfy/sdk-go/gin"
+    description="Reflection-driven Guard middleware validating Go struct binding tags with type-safe Body[T](c) retrieval."
+    href="/sdk/gin"
+    tag="Go 1.20+"
+  />
+  <FrameworkCard
+    title="Laravel"
+    subtitle="PHP 8 integration"
+    badge="fastapify/laravel"
+    badgeUrl="https://packagist.org/packages/fastapify/laravel"
+    description="Native PHP 8 #[Post] routing attributes and reflection middleware formatting errors into FastAPI's { detail: [...] } standard."
+    href="/sdk/laravel"
+    tag="PHP 8.2+"
+  />
+</FrameworkGrid>
 
 ---
 
-## The Architecture at a Glance
+## Why FastAPIfy?
 
-```text
-[ Incoming Request ]
-         │
-         ▼
-[ Fastapify Guard / Middleware ]
-         │
-         ├─► Invalid? ──► HTTP 422 Unprocessable Entity ({ detail: [...] })
-         │
-         ▼ (Valid)
-[ Route Handler (req.validatedBody) ]
+FastAPI revolutionized the Python backend ecosystem with two core ergonomics: **declarative runtime validation** and **instant interactive documentation at `/docs`**. 
+
+Until now, teams using Node.js, Next.js, Go, or PHP had to choose between writing verbose JSDoc/Swagger YAML by hand, maintaining desynchronized specs, or stitching together incompatible libraries.
+
+FastAPIfy bridges that gap:
+
+<CardGrid cols={2}>
+  <FeatureCard title="Zero Manual Swagger Writing" icon="code">
+    Never write hundreds of lines of brittle OpenAPI YAML or JSDoc comments again. Your route definitions and schemas serve as the single source of truth.
+  </FeatureCard>
+  <FeatureCard title="Standardized HTTP 422 Errors" icon="shield">
+    Every SDK emits the identical Pydantic-compatible validation payload: <code>{ "detail": [{ "loc": [...], "msg": "...", "type": "..." }] }</code>.
+  </FeatureCard>
+  <FeatureCard title="Instant Interactive /docs & /redoc" icon="browser">
+    A single CLI command scans your code and boots up embedded Swagger UI and ReDoc servers at <code>http://localhost:8000/docs</code>.
+  </FeatureCard>
+  <FeatureCard title="Zero-Dependency Runtime Architecture" icon="cpu">
+    Lightweight, deterministic validation designed for microservices and serverless runtimes without heavy dependencies.
+  </FeatureCard>
+</CardGrid>
+
+---
+
+## Standardized HTTP 422 Error Contract
+
+Whenever a request fails schema validation, FastAPIfy intercepts the request before reaching your business logic and returns an HTTP 422 Unprocessable Entity response:
+
+```json
+{
+  "detail": [
+    {
+      "loc": ["body", "age"],
+      "msg": "Input should be greater than or equal to 18",
+      "type": "greater_than_equal",
+      "ctx": { "ge": 18 }
+    },
+    {
+      "loc": ["body", "email"],
+      "msg": "Input should be a valid email address",
+      "type": "value_error.email"
+    }
+  ]
+}
 ```
 
-Simultaneously, the **Fastapify CLI** scans your codebase at build or dev time to compile an `openapi.json` contract and serve interactive Swagger UI documentation at `/docs`.
-
 ---
 
-## Next Steps
+## Ecosystem Comparison
 
-<CardGroup cols={2}>
-  <Card title="Quickstart" icon="bolt" href="/quickstart">
-    Install the CLI and document your first endpoint in under 2 minutes.
-  </Card>
-  <Card title="SDK Reference" icon="code" href="/sdk/express">
-    Explore framework-specific integrations and API signatures.
-  </Card>
-</CardGroup>
+| Framework | Package | Language Paradigm | Validation Hook |
+| :--- | :--- | :--- | :--- |
+| **Node.js (Express)** | `@fastapify/express` | Express Middleware | `app.post('/api', fastapify(schema), handler)` |
+| **Next.js App Router** | `@fastapify/nextjs` | Higher-Order Handler | `export const POST = nextFastapify({ schema, handler })` |
+| **Go (Gin)** | `github.com/dhirajparihar/FastAPIfy/sdk-go/gin` | Gin Middleware + Generics | `r.POST('/api', ginfastapify.Guard(Req{}), handler)` |
+| **PHP (Laravel)** | `fastapify/laravel` | PHP 8 Attributes + Reflection | `#[Post('/api', rules: [...])]` |
+
