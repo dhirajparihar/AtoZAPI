@@ -4,6 +4,18 @@ We are proud to announce the **v1.0.0** release of **AtoZAPI**, bringing Python 
 
 ---
 
+## 🚀 Published Packages & Registry Links
+
+| Component | Target Runtime | Package / Registry Link | Published Version |
+| :--- | :--- | :--- | :--- |
+| **CLI & Scanner** | Node.js / Multi-platform | [`@atozapi/cli`](https://www.npmjs.com/package/@atozapi/cli) | `v0.1.1` |
+| **Express SDK** | Express.js | [`@atozapi/express`](https://www.npmjs.com/package/@atozapi/express) | `v0.1.0` |
+| **Next.js SDK** | Next.js App Router | [`@atozapi/nextjs`](https://www.npmjs.com/package/@atozapi/nextjs) | `v0.1.0` |
+| **Go (Gin) SDK** | Go 1.20+ | [`github.com/dhirajparihar/AtoZAPI/sdk-go/gin`](https://pkg.go.dev/github.com/dhirajparihar/AtoZAPI/sdk-go/gin) | `v1.0.0` |
+| **PHP (Laravel) SDK** | PHP 8.1+ / Laravel 10+ | [`atozapi/laravel`](https://packagist.org/packages/atozapi/laravel) | `v1.0.0` |
+
+---
+
 ## What's in v1.0.0
 
 ### 1. Polyglot Framework SDKs
@@ -35,12 +47,12 @@ All framework SDKs return the exact Pydantic/FastAPI validation failure format:
 
 ---
 
-## Installation & Packages
+## Installation
 
 ### CLI
 ```bash
 # Run instantly with npx (recommended)
-npx @atozapi/cli
+npx @atozapi/cli serve
 
 # Or install globally
 npm install -g @atozapi/cli
@@ -64,8 +76,7 @@ composer require atozapi/laravel
 ---
 
 ## Standalone Native Binaries (Zero-Node)
-If you are developing in Go or PHP and don't want to install Node.js/npm, download the standalone single-file binary attached below:
-- **Windows (x64)**: `atozapi-win-x64.exe`
-- **Linux (x64)**: `atozapi-linux-x64`
-- **macOS (x64)**: `atozapi-macos-x64`
-
+If you are developing in Go or PHP and don't want to install Node.js/npm, standalone pre-compiled native binaries are available in `cli/dist/`:
+- **Windows (x64)**: `atozapi-win-x64.exe` (37.7 MB)
+- **Linux (x64)**: `atozapi-linux-x64` (46.3 MB)
+- **macOS (x64)**: `atozapi-macos-x64` (51.3 MB)
