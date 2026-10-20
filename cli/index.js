@@ -590,19 +590,161 @@ function renderSwaggerUIHtml(title = 'Fastapify - Swagger UI', specUrl = '/opena
   <meta charset="UTF-8">
   <title>${title}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.11.0/swagger-ui.css">
-  <link rel="icon" type="image/png" href="https://fastapi.tiangolo.com/img/favicon.png">
   <style>
+    :root {
+      --primary: #3159D9;
+      --primary-hover: #2343B8;
+      --bg: #F8FAFC;
+      --text: #0F172A;
+      --border: #E2E8F0;
+    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      background: #fafafa;
+      background: var(--bg);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
     }
-    .swagger-ui .topbar {
-      display: none;
+    /* Sleek FastAPIfy Top Header */
+    .fastapify-header {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .brand-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #3159D9, #10B981);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .brand-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: -0.02em;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: #64748B;
+      padding-left: 0.5rem;
+      border-left: 1px solid var(--border);
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .header-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: #64748B;
+      text-decoration: none;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+    .header-links a:hover {
+      color: var(--primary);
+      background: #EFF4FF;
+    }
+    .header-links .active-tab {
+      color: var(--primary);
+      background: #EFF4FF;
+      font-weight: 600;
+    }
+    
+    /* Swagger UI Overrides */
+    .swagger-ui .topbar { display: none !important; }
+    .swagger-ui {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      font-family: inherit !important;
+    }
+    .swagger-ui .info {
+      margin: 1.5rem 0 2rem 0 !important;
+    }
+    .swagger-ui .info .title {
+      font-family: inherit !important;
+      font-size: 2rem !important;
+      font-weight: 700 !important;
+      color: #0F172A !important;
+      letter-spacing: -0.02em !important;
+    }
+    .swagger-ui .opblock {
+      border-radius: 8px !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03) !important;
+      border: 1px solid var(--border) !important;
+      margin-bottom: 1rem !important;
+    }
+    .swagger-ui .opblock .opblock-summary {
+      padding: 0.85rem 1rem !important;
+    }
+    .swagger-ui .opblock .opblock-summary-method {
+      border-radius: 6px !important;
+      font-weight: 700 !important;
+      font-size: 12.5px !important;
+      padding: 6px 14px !important;
+    }
+    .swagger-ui .btn.execute {
+      background-color: var(--primary) !important;
+      border-color: var(--primary) !important;
+      border-radius: 6px !important;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+      font-weight: 600 !important;
+    }
+    .swagger-ui .btn.execute:hover {
+      background-color: var(--primary-hover) !important;
+    }
+    .swagger-ui .btn.try-out__btn {
+      border-radius: 6px !important;
+      font-weight: 600 !important;
+    }
+    .swagger-ui code, .swagger-ui pre {
+      font-family: 'JetBrains Mono', monospace !important;
+    }
+    .swagger-ui section.models {
+      border: 1px solid var(--border) !important;
+      border-radius: 8px !important;
+      background: #FFFFFF !important;
     }
   </style>
 </head>
 <body>
+  <header class="fastapify-header">
+    <div class="brand-wrap">
+      <div class="brand-badge">F</div>
+      <span class="brand-name">FastAPIfy</span>
+      <span class="brand-sub">Interactive Documentation</span>
+    </div>
+    <div class="header-links">
+      <a href="/docs" class="active-tab">Swagger UI</a>
+      <a href="/redoc">ReDoc</a>
+      <a href="/openapi.json" target="_blank">OpenAPI Spec</a>
+    </div>
+  </header>
   <div id="swagger-ui"></div>
   <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
   <script>
@@ -634,10 +776,54 @@ function renderRedocHtml(title = 'Fastapify - ReDoc', specUrl = '/openapi.json')
     <title>${title}</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
-    <style>body { margin: 0; padding: 0; }</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      body { margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+      .fastapify-header {
+        background: #FFFFFF;
+        border-bottom: 1px solid #E2E8F0;
+        padding: 0.75rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      }
+      .brand-wrap { display: flex; align-items: center; gap: 0.65rem; }
+      .brand-badge {
+        width: 28px; height: 28px; border-radius: 6px;
+        background: linear-gradient(135deg, #3159D9, #10B981);
+        display: flex; align-items: center; justify-content: center;
+        color: #FFFFFF; font-weight: 800; font-size: 14px;
+      }
+      .brand-name { font-size: 1.1rem; font-weight: 700; color: #0F172A; }
+      .brand-sub { font-size: 12px; color: #64748B; padding-left: 0.5rem; border-left: 1px solid #E2E8F0; }
+      .header-links { display: flex; align-items: center; gap: 1rem; }
+      .header-links a {
+        font-size: 13px; font-weight: 500; color: #64748B; text-decoration: none;
+        padding: 0.35rem 0.65rem; border-radius: 6px;
+      }
+      .header-links a:hover { color: #3159D9; background: #EFF4FF; }
+      .header-links .active-tab { color: #3159D9; background: #EFF4FF; font-weight: 600; }
+    </style>
   </head>
   <body>
+    <header class="fastapify-header">
+      <div class="brand-wrap">
+        <div class="brand-badge">F</div>
+        <span class="brand-name">FastAPIfy</span>
+        <span class="brand-sub">API Reference</span>
+      </div>
+      <div class="header-links">
+        <a href="/docs">Swagger UI</a>
+        <a href="/redoc" class="active-tab">ReDoc</a>
+        <a href="/openapi.json" target="_blank">OpenAPI Spec</a>
+      </div>
+    </header>
     <redoc spec-url="${specUrl}"></redoc>
     <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
   </body>
