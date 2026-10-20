@@ -1,6 +1,6 @@
 # Fastapify
 
-[![CI](https://github.com/fastapify/fastapify/actions/workflows/ci.yml/badge.svg)](https://github.com/fastapify/fastapify/actions)
+[![CI](https://github.com/dhirajparihar/FastAPIfy/actions/workflows/ci.yml/badge.svg)](https://github.com/dhirajparihar/FastAPIfy/actions)
 [![NPM Version](https://img.shields.io/npm/v/@fastapify/express?color=blue)](https://www.npmjs.com/package/@fastapify/express)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![OpenAPI 3.0](https://img.shields.io/badge/OpenAPI-3.0.3-teal.svg)](https://swagger.io/specification/)
@@ -194,7 +194,7 @@ export const POST = nextFastapify({
 });
 ```
 
-### 4. Go / Gin Integration (`github.com/fastapify/sdk-go/gin`)
+### 4. Go / Gin Integration (`github.com/dhirajparihar/FastAPIfy/sdk-go/gin`)
 
 The `ginfastapify.Guard(schema)` middleware intercepts incoming Gin requests (`c.ShouldBindJSON`):
 - Reflectively instantiates and validates the request body against struct tags (`binding:"required,gte=18"`).
@@ -206,7 +206,7 @@ package main
 
 import (
     "net/http"
-    ginfastapify "github.com/fastapify/sdk-go/gin"
+    ginfastapify "github.com/dhirajparihar/FastAPIfy/sdk-go/gin"
     "github.com/gin-gonic/gin"
 )
 
