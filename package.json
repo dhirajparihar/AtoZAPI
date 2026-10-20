@@ -17,7 +17,8 @@
     "build:docs": "node ./scripts/build-docs.js",
     "test": "node ./scripts/test-all.js",
     "test:all": "node ./scripts/test-all.js",
-    "test:parity": "node ./scripts/parity-test.js"
+    "test:parity": "node ./scripts/parity-test.js",
+    "publish:packages": "npm publish -w @atozapi/cli -w @atozapi/express -w @atozapi/nextjs"
   },
   "keywords": [
     "atozapi",
